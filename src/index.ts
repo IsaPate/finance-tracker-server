@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 
 const app: Application = express();
-const port = 3000; // The port your express server will be running on.
+const port = process.env.PORT || 3000;
 
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -16,5 +16,5 @@ app.get("/", (req: Request, res: Response) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:3000`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
