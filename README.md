@@ -1,5 +1,4 @@
-Express TypeScript Starter
-
+# Express TypeScript Starter
 
 1. Install dependencies
    npm install
