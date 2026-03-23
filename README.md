@@ -1,5 +1,5 @@
 Express TypeScript Starter
-  contains prisma , jest , supertest 
+
 
 1. Install dependencies
    npm install
