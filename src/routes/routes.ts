@@ -2,11 +2,16 @@ import { NextFunction, Router, Request, Response } from "express";
 
 const router = Router();
 
-router.get("/user", (req: Request, res: Response, next: NextFunction) => {
-  return res.json({
-    message: "welcome",
-  });
-});
+router.get(
+  "/user/:userId",
+  (req: Request, res: Response, next: NextFunction) => {
+    // suppose for now that name is unique
+
+    return res.json({
+      message: "welcome",
+    });
+  }
+);
 
 router.post("/user", (req: Request, res: Response, next: NextFunction) => {
   return res.json({
@@ -15,7 +20,7 @@ router.post("/user", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
-  "/transaction",
+  "/user/:userId/transaction",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
@@ -24,7 +29,7 @@ router.get(
 );
 
 router.post(
-  "/transaction",
+  "/user/:userId/transaction",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
@@ -32,16 +37,22 @@ router.post(
   }
 );
 
-router.get("/category", (req: Request, res: Response, next: NextFunction) => {
-  return res.json({
-    message: "welcome",
-  });
-});
+router.get(
+  "/user/:userId/category",
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.json({
+      message: "welcome",
+    });
+  }
+);
 
-router.post("/category", (req: Request, res: Response, next: NextFunction) => {
-  return res.json({
-    message: "welcome",
-  });
-});
+router.post(
+  "/user/:userId/category",
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.json({
+      message: "welcome",
+    });
+  }
+);
 
 export default router;
