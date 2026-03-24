@@ -9,5 +9,35 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-    url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int   @id@default(autoincrement())
+  name    String 
+  transactions Transaction []
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  title     String
+  amount    Float
+  type      TransactionType
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  categoryId Int?
+  category   Category?        @relation(fields: [categoryId], references: [id])
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Category {
+    id        Int      @id @default(autoincrement())
+    title     String 
+    transactions Transaction []
 }
