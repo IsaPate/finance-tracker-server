@@ -3,6 +3,7 @@ import {
   createTransactionHandler,
   createUserHandler,
   getUserHandler,
+  getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/controllers";
 
@@ -10,17 +11,13 @@ const router = Router();
 
 router.get("/users/:userId", getUserHandler);
 
-router.post("/user", createUserHandler);
+router.post("/users", createUserHandler);
 
 router.get("/users/:userId/transactions", getUserTransactionsHandler);
 
 router.get(
   "/users/:userId/transactions/:transactionId",
-  (req: Request, res: Response, next: NextFunction) => {
-    return res.json({
-      message: "welcome",
-    });
-  }
+  getUserTransactionHandler
 );
 
 router.post("/users/:userId/transaction", createTransactionHandler);

@@ -40,10 +40,14 @@ export const getTransactionsByCategoryId = async (categoryId: number) => {
   });
 };
 
-export const getTransactionById = async (transactionId: number) => {
+export const getTransactionByUserIdAndTransactionId = async (
+  userId: number,
+  transactionId: number
+) => {
   return db.transaction.findUnique({
     where: {
       id: transactionId,
+      userId,
     },
   });
 };
