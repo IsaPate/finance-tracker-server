@@ -3,7 +3,7 @@ import { createUserHandler, getUserHandler } from "../controllers/controllers";
 
 const router = Router();
 
-router.get("/user/:userId", getUserHandler);
+router.get("/users/:userId", getUserHandler);
 
 router.post("/user", createUserHandler);
 
@@ -17,7 +17,7 @@ router.get(
 );
 
 router.post(
-  "/user/:userId/transaction",
+  "/users/:userId/transaction",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
@@ -26,7 +26,7 @@ router.post(
 );
 
 router.get(
-  "/user/:userId/category",
+  "/users/:userId/category",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
@@ -35,7 +35,7 @@ router.get(
 );
 
 router.post(
-  "/user/:userId/category",
+  "/users/:userId/category",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
