@@ -1,23 +1,11 @@
 import { NextFunction, Router, Request, Response } from "express";
+import { createUserHandler, getUserHandler } from "../controllers/controllers";
 
 const router = Router();
 
-router.get(
-  "/user/:userId",
-  (req: Request, res: Response, next: NextFunction) => {
-    // suppose for now that name is unique
+router.get("/user/:userId", getUserHandler);
 
-    return res.json({
-      message: "welcome",
-    });
-  }
-);
-
-router.post("/user", (req: Request, res: Response, next: NextFunction) => {
-  return res.json({
-    message: "welcome",
-  });
-});
+router.post("/user", createUserHandler);
 
 router.get(
   "/user/:userId/transaction",
