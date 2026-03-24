@@ -32,6 +32,14 @@ export const getTransactionsByUserId = async (userId: number) => {
   });
 };
 
+export const getTransactionsByCategoryId = async (categoryId: number) => {
+  return db.transaction.findMany({
+    where: {
+      categoryId,
+    },
+  });
+};
+
 export const getTransactionById = async (transactionId: number) => {
   return db.transaction.findUnique({
     where: {
