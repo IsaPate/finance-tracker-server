@@ -8,7 +8,16 @@ router.get("/users/:userId", getUserHandler);
 router.post("/user", createUserHandler);
 
 router.get(
-  "/user/:userId/transaction",
+  "/user/:userId/transactions",
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.json({
+      message: "welcome",
+    });
+  }
+);
+
+router.get(
+  "/user/:userId/transactions/:transactionId",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",
