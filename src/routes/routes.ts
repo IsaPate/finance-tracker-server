@@ -12,10 +12,10 @@ router.get("/users/:userId", getUserHandler);
 
 router.post("/user", createUserHandler);
 
-router.get("/user/:userId/transactions", getUserTransactionsHandler);
+router.get("/users/:userId/transactions", getUserTransactionsHandler);
 
 router.get(
-  "/user/:userId/transactions/:transactionId",
+  "/users/:userId/transactions/:transactionId",
   (req: Request, res: Response, next: NextFunction) => {
     return res.json({
       message: "welcome",

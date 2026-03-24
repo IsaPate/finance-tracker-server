@@ -68,7 +68,10 @@ export async function createTransactionHandler(
   const userId = req.params.userId;
   const user = await getUserById(Number(userId));
   if (!user) {
-    return;
+    return res.status(404).json({
+      messge: "User not found.",
+      success: false,
+    });
   }
   const { title, amount, created_at, type } = req.body;
   if (!title || typeof title !== "string") {
