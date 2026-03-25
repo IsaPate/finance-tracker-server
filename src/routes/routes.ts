@@ -1,11 +1,13 @@
 import { NextFunction, Router, Request, Response } from "express";
 import {
-  createTransactionHandler,
-  createUserHandler,
   getUserHandler,
+  createUserHandler,
+} from "../controllers/user_controller";
+import {
   getUserTransactionHandler,
   getUserTransactionsHandler,
-} from "../controllers/controllers";
+  createTransactionHandler,
+} from "../controllers/transaction_controller";
 
 const router = Router();
 
