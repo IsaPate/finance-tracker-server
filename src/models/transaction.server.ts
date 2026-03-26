@@ -1,5 +1,5 @@
 import { $Enums } from "@prisma/client";
-import { prisma as db } from "../lib/prisma_client";
+import { prisma } from "../lib/prisma_client";
 
 export const createTransaction = async (
   userId: number,
@@ -9,7 +9,7 @@ export const createTransaction = async (
   createdAt: Date,
   categoryId?: number
 ) => {
-  return await db.transaction.create({
+  return await prisma.transaction.create({
     data: {
       title,
       amount,
@@ -22,7 +22,7 @@ export const createTransaction = async (
 };
 
 export const getTransactionsByUserId = async (userId: number) => {
-  return db.transaction.findMany({
+  return prisma.transaction.findMany({
     where: {
       userId,
     },
@@ -33,17 +33,21 @@ export const getTransactionsByUserId = async (userId: number) => {
 };
 
 export const getTransactionsByCategoryId = async (categoryId: number) => {
-  return db.transaction.findMany({
+  return prisma.transaction.findMany({
     where: {
       categoryId,
     },
   });
 };
 
-export const getTransactionById = async (transactionId: number) => {
-  return db.transaction.findUnique({
+export const getTransactionByUserIdAndTransactionId = async (
+  userId: number,
+  transactionId: number
+) => {
+  return prisma.transaction.findUnique({
     where: {
       id: transactionId,
+      userId,
     },
   });
 };
@@ -56,7 +60,7 @@ export const udpateTransaction = async (
   createdAt: Date,
   transactionType: $Enums.TransactionType
 ) => {
-  return db.transaction.updateMany({
+  return prisma.transaction.updateMany({
     where: {
       id: transactionId,
       userId,

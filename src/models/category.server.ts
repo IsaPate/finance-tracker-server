@@ -1,7 +1,7 @@
-import { prisma as db } from "../lib/prisma_client";
+import { prisma } from "../lib/prisma_client";
 
 export const createCategory = async (name: string) => {
-  return await db.category.create({
+  return await prisma.category.create({
     data: {
       title: name,
     },
@@ -9,7 +9,7 @@ export const createCategory = async (name: string) => {
 };
 
 export const getCategoryById = async (categoryId: number) => {
-  return await db.category.findUnique({
+  return await prisma.category.findUnique({
     where: {
       id: categoryId,
     },
@@ -17,7 +17,7 @@ export const getCategoryById = async (categoryId: number) => {
 };
 
 export const updateCategory = async (categoryId: number, name: string) => {
-  return await db.category.update({
+  return await prisma.category.update({
     where: {
       id: categoryId,
     },
