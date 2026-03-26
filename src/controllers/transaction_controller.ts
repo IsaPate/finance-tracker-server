@@ -51,6 +51,7 @@ export async function createTransactionHandler(
   next: NextFunction
 ) {
   const userId = req.params.userId;
+
   const user = await getUserById(Number(userId));
   if (!user) {
     return res.status(404).json({
@@ -58,7 +59,7 @@ export async function createTransactionHandler(
       success: false,
     });
   }
-  const { title, amount, created_at, type } = req.body;
+  const { title, amount, createdAt, type } = req.body;
   if (!title || typeof title !== "string") {
     return res.status(400).json({
       message: "Title has wrong type is missing.",
@@ -71,7 +72,9 @@ export async function createTransactionHandler(
       success: false,
     });
   }
-  if (!created_at) {
+
+  const date = new Date(createdAt.split("T")[0]);
+  if (!date) {
     return res.status(400).json({
       message: "Date is missing.",
       success: false,
@@ -88,7 +91,7 @@ export async function createTransactionHandler(
     title,
     amount,
     type,
-    created_at
+    date
   );
   if (!transaction) {
     return res.status(404).json({
