@@ -1,12 +1,11 @@
-import express, { Application, NextFunction, Request, Response } from "express";
-import router from "../src/routes/routes";
 import dotenv from "dotenv";
-
 dotenv.config();
+
+import express, { Application, NextFunction, Request, Response } from "express";
+import router from "./routes/routes";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
-console.log(process.env.DATABASE_URL);
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
 
