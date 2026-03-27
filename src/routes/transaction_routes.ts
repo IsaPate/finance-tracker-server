@@ -1,5 +1,6 @@
 import {
   createTransactionHandler,
+  deleteUserTransactionsHandler,
   getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/transaction_controller";
@@ -29,7 +30,10 @@ transactionRouter.post(
   asyncHandler(createTransactionHandler)
 );
 // BULK ACTIONS
-transactionRouter.delete(urls.userTransactions);
+transactionRouter.delete(
+  urls.userTransactions,
+  asyncHandler(deleteUserTransactionsHandler)
+);
 
 transactionRouter.put(urls.userTransactions);
 
