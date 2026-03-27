@@ -8,19 +8,29 @@ import { NextFunction, Router, Request, Response } from "express";
 
 const transactionRouter = Router();
 
+const urls = {
+  userTransaction: "/users/:userId/transaction",
+  userTransactions: "/users/:userId/transactions",
+  userTransactionId: "/users/:userId/transactions/:transactionId",
+};
+
 transactionRouter.get(
-  "/users/:userId/transactions",
+  urls.userTransactions,
   asyncHandler(getUserTransactionsHandler)
 );
 
 transactionRouter.get(
-  "/users/:userId/transactions/:transactionId",
+  urls.userTransactionId,
   asyncHandler(getUserTransactionHandler)
 );
 
 transactionRouter.post(
-  "/users/:userId/transaction",
+  urls.userTransaction,
   asyncHandler(createTransactionHandler)
 );
+// BULK ACTIONS
+transactionRouter.delete(urls.userTransactions);
+
+transactionRouter.put(urls.userTransactions);
 
 export { transactionRouter };

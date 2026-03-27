@@ -73,3 +73,25 @@ export const udpateTransaction = async (
     },
   });
 };
+
+export const deleteTransactions = async (
+  transactionIds: number[],
+  userId: number
+) => {
+  return prisma.transaction.deleteMany({
+    where: {
+      userId,
+      id: { in: transactionIds },
+    },
+  });
+};
+
+export const udpateTransactions = async (
+  transactionIds: number[],
+  userId: number
+) => {
+  return prisma.transaction.updateMany({
+    data: {},
+    where: { userId, id: { in: transactionIds } },
+  });
+};

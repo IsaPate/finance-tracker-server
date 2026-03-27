@@ -3,6 +3,7 @@ import { createUser, getUserById } from "../models/user.server";
 
 import {
   createTransaction,
+  deleteTransactions,
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
 } from "../models/transaction.server";
@@ -103,3 +104,26 @@ export async function getUserTransactionsHandler(
     success: true,
   });
 }
+export async function deleteUserTransactionsHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.params.userId;
+  const transactionIds = req.body.transactionIds;
+  // validate them
+  await deleteTransactions(
+    transactionIds.map((t: string) => Number(t)),
+    Number(userId)
+  );
+  return res.status(200).json({
+    message: "Transactions deleted",
+    success: true,
+  });
+}
+
+export async function editUserTransactions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
