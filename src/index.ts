@@ -2,8 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express, { Application, NextFunction, Request, Response } from "express";
-import router from "./routes/routes";
 import { errorMiddleware } from "./middlewares/handlers";
+import { userRouter } from "./routes/user_routes";
+import { transactionRouter } from "./routes/transaction_routes";
+import { categoryRouter } from "./routes/category_routes";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-app.use(router);
+app.use(userRouter);
+app.use(transactionRouter);
+app.use(categoryRouter);
+
 // Basic route
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript + Express!");
