@@ -9,11 +9,7 @@ export async function getUserHandler(
   const userId = req.params.userId;
   const user = await getUserById(Number(userId));
   if (!user) {
-    return res.status(404).json({
-      id: "",
-      name: "",
-      success: false,
-    });
+    throw new Error("User not found.");
   }
   return res.status(200).json({
     id: user.id,
@@ -39,11 +35,7 @@ export async function createUserHandler(
 
   const created = await createUser(name);
   if (!created) {
-    return res.status(500).json({
-      id: "",
-      name: "",
-      success: false,
-    });
+    throw new Error("Could not create user.");
   }
   return res.status(201).json({
     id: created.id,

@@ -8,21 +8,28 @@ import {
   getUserTransactionsHandler,
   createTransactionHandler,
 } from "../controllers/transaction_controller";
+import { asyncHandler } from "../middlewares/handlers";
 
 const router = Router();
 
-router.get("/users/:userId", getUserHandler);
+router.get("/users/:userId", asyncHandler(getUserHandler));
 
-router.post("/users", createUserHandler);
+router.post("/users", asyncHandler(createUserHandler));
 
-router.get("/users/:userId/transactions", getUserTransactionsHandler);
+router.get(
+  "/users/:userId/transactions",
+  asyncHandler(getUserTransactionsHandler)
+);
 
 router.get(
   "/users/:userId/transactions/:transactionId",
-  getUserTransactionHandler
+  asyncHandler(getUserTransactionHandler)
 );
 
-router.post("/users/:userId/transaction", createTransactionHandler);
+router.post(
+  "/users/:userId/transaction",
+  asyncHandler(createTransactionHandler)
+);
 
 router.get(
   "/users/:userId/category",

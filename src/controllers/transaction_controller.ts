@@ -14,30 +14,17 @@ export async function getUserTransactionHandler(
   const userId = Number(req.params.userId);
   const user = await getUserById(Number(userId));
   if (!user) {
-    return res.status(404).json({
-      transaction: null,
-      message: "User not found.",
-      success: false,
-    });
+    throw new Error("User not found.");
   }
   const transactionId = Number(req.params.transactionId);
-  if (!transactionId) {
-    return res.status(404).json({
-      transaction: null,
-      message: "Transaction not found.",
-      success: false,
-    });
-  }
+
   const transaction = await getTransactionByUserIdAndTransactionId(
     userId,
     transactionId
   );
 
   if (!transaction) {
-    return res.status(404).json({
-      message: "Transaction not found.",
-      success: false,
-    });
+    throw new Error("Transaction not found.");
   }
   return res.status(200).json({
     transaction,
@@ -54,10 +41,7 @@ export async function createTransactionHandler(
 
   const user = await getUserById(Number(userId));
   if (!user) {
-    return res.status(404).json({
-      messge: "User not found.",
-      success: false,
-    });
+    throw new Error("User not found.");
   }
   const { title, amount, createdAt, type } = req.body;
   if (!title || typeof title !== "string") {
@@ -94,10 +78,7 @@ export async function createTransactionHandler(
     date
   );
   if (!transaction) {
-    return res.status(404).json({
-      message: "Transaction failed.",
-      success: false,
-    });
+    throw new Error("Transactions failed.");
   }
   return res.status(201).json({
     transaction,
@@ -114,10 +95,7 @@ export async function getUserTransactionsHandler(
   const transactions = await getTransactionsByUserId(Number(userId));
 
   if (!transactions) {
-    return res.status(404).json({
-      transactions: [],
-      success: false,
-    });
+    throw new Error("Transaction not found.");
   }
 
   return res.status(200).json({
