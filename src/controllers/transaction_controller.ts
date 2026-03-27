@@ -115,7 +115,7 @@ export async function deleteUserTransactionsHandler(
   await deleteTransactions(
     transactionIds.map((t: string) => Number(t)),
     Number(userId)
-  );
+  ); // result.count number
   return res.status(200).json({
     message: "Transactions deleted",
     success: true,
