@@ -5,24 +5,38 @@ import {
   deleteCategoryHandler,
   editCategoryHandler,
   getCategoryHandler,
+  getUserCategoriesHandler,
 } from "../controllers/category_controller";
 
 const categoryRouter = Router();
 
-categoryRouter.get("/users/:userId/category", asyncHandler(getCategoryHandler));
-
-categoryRouter.post(
-  "/users/:userId/categories",
-  asyncHandler(createCategoryHandler)
+// USER  CATEGORY
+categoryRouter.get(
+  "/users/:userId/categories/:categoryName",
+  asyncHandler(getCategoryHandler)
 );
 
 categoryRouter.put(
-  "/users/:userId/category",
+  "/users/:userId/categories/:categoryName",
   asyncHandler(editCategoryHandler)
 );
 
 categoryRouter.delete(
-  "/users/:userId/category",
+  "/users/:userId/categories/:categoryName",
   asyncHandler(deleteCategoryHandler)
+);
+// USER CATEGORIES
+categoryRouter.get(
+  "/users/:userId/categories",
+  asyncHandler(getUserCategoriesHandler)
+);
+categoryRouter.post(
+  "/users/:userId/categories",
+  asyncHandler(createCategoryHandler)
+);
+// USER TRANSACTIONS CATEGORIES
+categoryRouter.get(
+  "/users/:userId/categories/:categoryName/transactions",
+  asyncHandler()
 );
 export { categoryRouter };
