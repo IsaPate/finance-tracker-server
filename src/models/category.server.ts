@@ -8,6 +8,14 @@ export const createCategory = async (name: string) => {
   });
 };
 
+export const getCategoryByTitle = async (title: string) => {
+  return await prisma.category.findUnique({
+    where: {
+      title,
+    },
+  });
+};
+
 export const getCategoryById = async (categoryId: number) => {
   return await prisma.category.findUnique({
     where: {
@@ -16,13 +24,19 @@ export const getCategoryById = async (categoryId: number) => {
   });
 };
 
-export const updateCategory = async (categoryId: number, name: string) => {
+export const updateCategory = async (title: string, newTitle: string) => {
   return await prisma.category.update({
     where: {
-      id: categoryId,
+      title,
     },
-    data: {
-      title: name,
+    data: newTitle,
+  });
+};
+
+export const deleteCategory = async (title: string) => {
+  return await prisma.category.delete({
+    where: {
+      title,
     },
   });
 };
