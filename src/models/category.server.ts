@@ -29,7 +29,9 @@ export const updateCategory = async (title: string, newTitle: string) => {
     where: {
       title,
     },
-    data: newTitle,
+    data: {
+      title: newTitle,
+    },
   });
 };
 
@@ -37,6 +39,25 @@ export const deleteCategory = async (title: string) => {
   return await prisma.category.delete({
     where: {
       title,
+    },
+  });
+};
+
+//FUTUTRE REQUEST
+export const getUserCategories = async (userId: number) => {
+  return await prisma.category.findMany({
+    where: {},
+  });
+};
+
+export const getUserTransactionsByCategory = async (
+  userId: number,
+  categoryId: number
+) => {
+  return await prisma.category.findMany({
+    where: {
+      userId: userId,
+      id: categoryId,
     },
   });
 };
