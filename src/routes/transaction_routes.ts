@@ -1,5 +1,6 @@
 import {
   createTransactionHandler,
+  deleteUserTransactionsHandler,
   getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/transaction_controller";
@@ -21,6 +22,11 @@ transactionRouter.get(
 transactionRouter.post(
   "/users/:userId/transaction",
   asyncHandler(createTransactionHandler)
+);
+// BULK ACTIONS
+transactionRouter.delete(
+  "/users/:userId/transactions",
+  asyncHandler(deleteUserTransactionsHandler)
 );
 
 export { transactionRouter };
