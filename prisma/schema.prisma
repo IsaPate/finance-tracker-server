@@ -38,6 +38,6 @@ enum TransactionType {
 
 model Category {
     id        Int      @id @default(autoincrement())
-    title     String 
+    title     String   @unique
     transactions Transaction []
 }
