@@ -24,14 +24,14 @@ export async function getCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { title } = req.params;
-  if (typeof title !== "string") {
+  const { categoryName } = req.params;
+  if (typeof categoryName !== "string") {
     return res.status(400).json({
       message: "Invalid title parameter.",
       success: false,
     });
   }
-  const category = await getCategoryByTitle(title);
+  const category = await getCategoryByTitle(categoryName);
   return res.status(200).json({
     message: "Category found.",
     data: category,
@@ -44,15 +44,15 @@ export async function deleteCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { title } = req.params;
-  if (typeof title !== "string") {
+  const { categoryName } = req.params;
+  if (typeof categoryName !== "string") {
     return res.status(400).json({
       message: "Invalid title parameter.",
       success: false,
     });
   }
-  await deleteCategory(title);
-  return res.status(201).json({
+  await deleteCategory(categoryName);
+  return res.status(200).json({
     message: "Category deleted.",
     success: true,
   });
@@ -63,17 +63,25 @@ export async function editCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { title } = req.params;
-  const { newTitle } = req.body;
-  if (typeof title !== "string") {
+  const { categoryName } = req.params;
+  const { title } = req.body;
+  if (typeof categoryName !== "string") {
     return res.status(400).json({
       message: "Invalid title parameter.",
       success: false,
     });
   }
-  await updateCategory(title, newTitle);
-  return res.status(201).json({
+  await updateCategory(categoryName, title);
+  return res.status(200).json({
     message: "Category edited.",
     success: true,
   });
 }
+
+// REQUEST FOR USER CATEGORIES
+
+export async function getUserCategoriesHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
