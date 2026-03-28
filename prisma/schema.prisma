@@ -23,6 +23,7 @@ model Transaction {
   amount    Float
   type      TransactionType
   createdAt DateTime @default(now())
+  notes?    String
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
@@ -38,6 +39,6 @@ enum TransactionType {
 
 model Category {
     id        Int      @id @default(autoincrement())
-    title     String   @unique
+    title     String   
     transactions Transaction []
 }
