@@ -23,7 +23,7 @@ model Transaction {
   amount    Float
   type      TransactionType
   createdAt DateTime @default(now())
-  notes?    String
+  notes     String?
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
