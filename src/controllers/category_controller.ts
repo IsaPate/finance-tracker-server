@@ -4,8 +4,10 @@ import {
   deleteCategory,
   getCategoryById,
   getCategoryByTitle,
+  getUserCategories,
   updateCategory,
 } from "../models/category.server";
+import { getTransactionsByCategoryId } from "../models/transaction.server";
 
 // REQUESTS FOR SINGLE CATEGORY
 export async function createCategoryHandler(
@@ -73,4 +75,41 @@ export async function getUserCategoriesHandler(
   req: Request,
   res: Response,
   next: NextFunction
-) {}
+) {
+  const { userId } = req.params;
+
+  const categories = await getUserCategories(Number(userId));
+
+  if (!categories) {
+    throw new Error("No categories found for this user.");
+  }
+  return res.status(200).json({
+    message: "Categories found.",
+    data: categories,
+    success: true,
+  });
+}
+
+export async function getTransactionsByUserIdAndCategoryIdHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { userId } = req.params;
+  const { categoryId } = req.params;
+
+  const transactions = await getTransactionsByCategoryId(
+    Number(categoryId),
+    Number(userId)
+  );
+
+  if (!transactions) {
+    throw new Error("No transactions found for this category.");
+  }
+
+  return res.status(200).json({
+    message: "Transactions found.",
+    data: transactions,
+    success: true,
+  });
+}
