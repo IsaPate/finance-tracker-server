@@ -24,10 +24,10 @@ export const getCategoryById = async (categoryId: number) => {
   });
 };
 
-export const updateCategory = async (title: string, newTitle: string) => {
+export const updateCategory = async (categoryId: number, newTitle: string) => {
   return await prisma.category.update({
     where: {
-      title,
+      id: categoryId,
     },
     data: {
       title: newTitle,
@@ -35,10 +35,10 @@ export const updateCategory = async (title: string, newTitle: string) => {
   });
 };
 
-export const deleteCategory = async (title: string) => {
+export const deleteCategory = async (categoryId: number) => {
   return await prisma.category.delete({
     where: {
-      title,
+      id: categoryId,
     },
   });
 };

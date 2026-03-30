@@ -12,17 +12,17 @@ const categoryRouter = Router();
 
 // USER  CATEGORY
 categoryRouter.get(
-  "/users/:userId/categories/:categoryName",
+  "/users/:userId/categories/:categoryId",
   asyncHandler(getCategoryHandler)
 );
 
 categoryRouter.put(
-  "/users/:userId/categories/:categoryName",
+  "/users/:userId/categories/:categoryId",
   asyncHandler(editCategoryHandler)
 );
 
 categoryRouter.delete(
-  "/users/:userId/categories/:categoryName",
+  "/users/:userId/categories/:categoryId",
   asyncHandler(deleteCategoryHandler)
 );
 // USER CATEGORIES
@@ -36,7 +36,7 @@ categoryRouter.post(
 );
 // USER TRANSACTIONS CATEGORIES
 categoryRouter.get(
-  "/users/:userId/categories/:categoryName/transactions",
+  "/users/:userId/categories/:categoryId/transactions",
   asyncHandler()
 );
 export { categoryRouter };
