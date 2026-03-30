@@ -1,17 +1,21 @@
 import { prisma } from "../lib/prisma_client";
 
-export const createCategory = async (name: string) => {
+export const createCategory = async (title: string, userId: number) => {
   return await prisma.category.create({
     data: {
-      title: name,
+      userId,
+      title,
     },
   });
 };
 
-export const getCategoryByTitle = async (title: string) => {
+export const getCategoryByTitle = async (title: string, userId: number) => {
   return await prisma.category.findUnique({
     where: {
-      title,
+      title_userId: {
+        userId,
+        title,
+      },
     },
   });
 };
