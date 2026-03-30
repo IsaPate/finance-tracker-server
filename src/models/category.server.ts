@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma_client";
+import { getUserById } from "./user.server";
 
 export const createCategory = async (title: string, userId: number) => {
   return await prisma.category.create({
@@ -49,8 +50,16 @@ export const deleteCategory = async (categoryId: number) => {
 
 //FUTUTRE REQUEST
 export const getUserCategories = async (userId: number) => {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
   return await prisma.category.findMany({
-    where: {},
+    where: {
+      userId,
+    },
   });
 };
 
