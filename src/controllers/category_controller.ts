@@ -14,7 +14,10 @@ export async function createCategoryHandler(
   next: NextFunction
 ) {
   const { title } = req.body;
-  await createCategory(title);
+  const userId = req.params.userId;
+
+  await createCategory(title, Number(userId));
+
   return res.status(201).json({
     message: "Category created.",
     success: true,
