@@ -72,19 +72,17 @@ export async function createTransactionHandler(
       success: false,
     });
   }
-  if (!category) {
-    return res.status(400).json({
-      message: "Category is missing.",
-      success: false,
-    });
-  }
 
-  const cat = await getCategoryByTitle(category, Number(userId));
-  if (!cat) {
-    return res.status(400).json({
-      message: "Category does not exist.",
-      success: false,
-    });
+  let categoryId = undefined;
+  if (category) {
+    const cat = await getCategoryByTitle(category, Number(userId));
+    if (!cat) {
+      return res.status(400).json({
+        message: "Category does not exist.",
+        success: false,
+      });
+    }
+    categoryId = Number(cat.id);
   }
   const transaction = await createTransaction(
     Number(user.id),
@@ -92,7 +90,7 @@ export async function createTransactionHandler(
     amount,
     type,
     date,
-    Number(cat.id)
+    categoryId
   );
   if (!transaction) {
     throw new Error("Transactions failed.");
