@@ -5,6 +5,7 @@ import {
   deleteCategoryHandler,
   editCategoryHandler,
   getCategoryHandler,
+  getTransactionsByUserIdAndCategoryIdHandler,
   getUserCategoriesHandler,
 } from "../controllers/category_controller";
 
@@ -37,6 +38,6 @@ categoryRouter.post(
 // USER TRANSACTIONS CATEGORIES
 categoryRouter.get(
   "/users/:userId/categories/:categoryId/transactions",
-  asyncHandler()
+  asyncHandler(getTransactionsByUserIdAndCategoryIdHandler)
 );
 export { categoryRouter };
