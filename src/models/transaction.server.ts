@@ -32,9 +32,13 @@ export const getTransactionsByUserId = async (userId: number) => {
   });
 };
 
-export const getTransactionsByCategoryId = async (categoryId: number) => {
+export const getTransactionsByCategoryId = async (
+  categoryId: number,
+  userId: number
+) => {
   return prisma.transaction.findMany({
     where: {
+      userId,
       categoryId,
     },
   });
