@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   createCategory,
   deleteCategory,
+  getCategoryById,
   getCategoryByTitle,
   updateCategory,
 } from "../models/category.server";
@@ -24,14 +25,9 @@ export async function getCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { categoryName } = req.params;
-  if (typeof categoryName !== "string") {
-    return res.status(400).json({
-      message: "Invalid title parameter.",
-      success: false,
-    });
-  }
-  const category = await getCategoryByTitle(categoryName);
+  const { categoryId } = req.params;
+
+  const category = await getCategoryById(Number(categoryId));
   return res.status(200).json({
     message: "Category found.",
     data: category,
@@ -44,14 +40,9 @@ export async function deleteCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { categoryName } = req.params;
-  if (typeof categoryName !== "string") {
-    return res.status(400).json({
-      message: "Invalid title parameter.",
-      success: false,
-    });
-  }
-  await deleteCategory(categoryName);
+  const { categoryId } = req.params;
+
+  await deleteCategory(Number(categoryId));
   return res.status(200).json({
     message: "Category deleted.",
     success: true,
@@ -63,15 +54,10 @@ export async function editCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { categoryName } = req.params;
+  const { categoryId } = req.params;
   const { title } = req.body;
-  if (typeof categoryName !== "string") {
-    return res.status(400).json({
-      message: "Invalid title parameter.",
-      success: false,
-    });
-  }
-  await updateCategory(categoryName, title);
+
+  await updateCategory(Number(categoryId), title);
   return res.status(200).json({
     message: "Category edited.",
     success: true,
