@@ -1,13 +1,17 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import { createUser, getUserByName } from "../models/user.server";
+import {
+  createUser,
+  getUserByEmail,
+  getUserByName,
+} from "../models/user.server";
 import bcrypt from "bcryptjs";
 
 const authRouter = Router();
 authRouter.post("/resgister", async (req, res) => {
-  const { username, password } = req.body;
+  const { name, password, email } = req.body;
   //validation username and password
-  const user = await getUserByName(username);
+  const user = await getUserByEmail(email);
   if (user) {
     return res.status(400).json({
       message: "Username already exists",
@@ -15,21 +19,24 @@ authRouter.post("/resgister", async (req, res) => {
     });
   }
   const hashed = bcrypt.hashSync(password, 10);
-  await createUser(username, hashed);
+  const newUser = await createUser(name, hashed, email);
   return res.status(201).json({
     message: "User created successfully",
-    username,
+    user: {
+      name: newUser.name,
+      email: newUser.email,
+    },
     success: true,
   });
 });
 authRouter.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   //validation username and password
-  const user = await getUserByName(username);
+  const user = await getUserByEmail(email);
 
   if (!user) {
     return res.status(401).json({
-      message: "Invalid username or password",
+      message: "Invalid email or password",
       success: false,
     });
   }
@@ -42,7 +49,7 @@ authRouter.post("/login", async (req, res) => {
     });
   }
   jwt.sign(
-    { userId: user.id, username: user.name },
+    { userId: user.id, email: user.email },
     `${process.env.SECRET_KEY}`,
     { expiresIn: "1h" },
     (err: any, token?: string) => {
