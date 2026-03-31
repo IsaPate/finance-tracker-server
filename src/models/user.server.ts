@@ -15,9 +15,7 @@ export const createUser = async (
         email,
       },
     });
-    if (!user) {
-      throw new Error("Could not create user.");
-    }
+
     await tx.category.createMany({
       data: initialCategories.map((cat) => ({
         title: cat,
