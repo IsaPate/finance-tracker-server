@@ -8,7 +8,7 @@ export const verifyToken = (
 ) => {
   const bearerHeader = req.headers["authorization"];
   if (!bearerHeader) {
-    res.status(403).json({
+    return res.status(403).json({
       message: "Forbidden. No token provided.",
       success: false,
     });
@@ -23,7 +23,7 @@ export const verifyToken = (
       });
     }
     const decoded = jwt.verify(bearer, process.env.SECRET_KEY as string);
-    req.token = decoded;
+    req.user = decoded;
     next();
   } catch (error) {
     return res.status(403).json({
