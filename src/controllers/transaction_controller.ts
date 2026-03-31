@@ -7,6 +7,7 @@ import {
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
 } from "../models/transaction.server";
+import { getCategoryByTitle } from "../models/category.server";
 export async function getUserTransactionHandler(
   req: Request,
   res: Response,
@@ -44,7 +45,7 @@ export async function createTransactionHandler(
   if (!user) {
     throw new Error("User not found.");
   }
-  const { title, amount, createdAt, type } = req.body;
+  const { title, amount, createdAt, type, category } = req.body;
   if (!title || typeof title !== "string") {
     return res.status(400).json({
       message: "Title has wrong type is missing.",
@@ -71,12 +72,25 @@ export async function createTransactionHandler(
       success: false,
     });
   }
+
+  let categoryId = undefined;
+  if (category) {
+    const cat = await getCategoryByTitle(category, Number(userId));
+    if (!cat) {
+      return res.status(400).json({
+        message: "Category does not exist.",
+        success: false,
+      });
+    }
+    categoryId = Number(cat.id);
+  }
   const transaction = await createTransaction(
     Number(user.id),
     title,
     amount,
     type,
-    date
+    date,
+    categoryId
   );
   if (!transaction) {
     throw new Error("Transactions failed.");

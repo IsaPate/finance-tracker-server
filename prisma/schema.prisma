@@ -12,9 +12,10 @@ datasource db {
 }
 
 model User {
-  id      Int   @id@default(autoincrement())
+  id      Int   @id @default(autoincrement())
   name    String 
   transactions Transaction []
+  categories Category []
 }
 
 model Transaction {
@@ -23,12 +24,13 @@ model Transaction {
   amount    Float
   type      TransactionType
   createdAt DateTime @default(now())
+  notes     String?
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 
   categoryId Int?
-  category   Category?        @relation(fields: [categoryId], references: [id])
+  category   Category?        @relation(fields: [categoryId], references: [id] , onDelete: SetNull )
 }
 
 enum TransactionType {
@@ -38,6 +40,10 @@ enum TransactionType {
 
 model Category {
     id        Int      @id @default(autoincrement())
-    title     String 
+    title     String   
     transactions Transaction []
+    userId    Int
+    user      User  @relation(fields : [userId] , references : [id])
+
+    @@unique([title,userId])
 }
