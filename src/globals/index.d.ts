@@ -2,7 +2,7 @@ export {};
 declare global {
   namespace Express {
     interface Request {
-      token?: string;
+      token?: string | JwtPayload;
     }
   }
 }
