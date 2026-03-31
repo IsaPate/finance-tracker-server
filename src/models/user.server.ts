@@ -2,7 +2,8 @@ import { User } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
 export const createUser = async (
   name: string,
-  password: string
+  password: string,
+  email: string
 ): Promise<User> => {
   const initialCategories = ["Supermarket", "Food", "Transport"];
 
@@ -11,6 +12,7 @@ export const createUser = async (
       data: {
         name,
         password,
+        email,
       },
     });
     if (!user) {
