@@ -8,7 +8,7 @@ import {
 import bcrypt from "bcryptjs";
 
 const authRouter = Router();
-authRouter.post("/resgister", async (req, res) => {
+authRouter.post("/register", async (req, res) => {
   const { name, password, email } = req.body;
   //validation username and password
   const user = await getUserByEmail(email);
