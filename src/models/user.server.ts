@@ -53,3 +53,30 @@ export const getUserByName = async (name: string) => {
     },
   });
 };
+export const getUserByEmail = async (email: string) => {
+  return await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+};
+
+export const getAllUsers = async () => {
+  return prisma.user.findMany();
+};
+
+export const deleteUserById = async (userId: number) => {
+  return await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+};
+
+export const deleteUserByEmail = async (email: string) => {
+  return await prisma.user.delete({
+    where: {
+      email,
+    },
+  });
+};
