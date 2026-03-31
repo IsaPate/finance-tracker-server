@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, getUserById } from "../models/user.server";
+import { createUser, getAllUsers, getUserById } from "../models/user.server";
 
 export async function getUserHandler(
   req: Request,
@@ -33,13 +33,25 @@ export async function createUserHandler(
     });
   }
 
-  const created = await createUser(name);
+  const created = await createUser(name, "", "");
   if (!created) {
     throw new Error("Could not create user.");
   }
   return res.status(201).json({
     id: created.id,
     name: created.name,
+    success: true,
+  });
+}
+
+export async function getAllUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const users = await getAllUsers();
+  return res.status(200).json({
+    users,
     success: true,
   });
 }
