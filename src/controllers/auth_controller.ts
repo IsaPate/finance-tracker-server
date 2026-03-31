@@ -14,7 +14,7 @@ export async function registerUser(
   if (user) {
     throw new Error("Email already exists");
   }
-  const hashed = bcrypt.hashSync(password, 10);
+  const hashed = await bcrypt.hash(password, 10);
   const newUser = await createUser(name, hashed, email);
   return res.status(201).json({
     message: "User created successfully",
