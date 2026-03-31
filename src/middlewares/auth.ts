@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 export const verifyToken = (
   req: Request,
@@ -13,6 +14,21 @@ export const verifyToken = (
     });
   }
   const bearer = bearerHeader?.split(" ")[1];
-  req.token = bearer;
-  next();
+
+  try {
+    if (!bearer) {
+      return res.status(403).json({
+        message: "Forbidden. Invalid token.",
+        success: false,
+      });
+    }
+    const decoded = jwt.verify(bearer, process.env.SECRET_KEY as string);
+    req.token = decoded;
+    next();
+  } catch (error) {
+    return res.status(403).json({
+      message: "Forbidden. No token provided.",
+      success: false,
+    });
+  }
 };
