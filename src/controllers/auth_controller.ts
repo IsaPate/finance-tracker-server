@@ -43,29 +43,18 @@ export async function loginUser(
   if (!compare) {
     throw new Error("Invalid password");
   }
-  jwt.sign(
+
+  const token = jwt.sign(
     { userId: user.id, email: user.email },
-    `${process.env.SECRET_KEY}`,
-    { expiresIn: "1h" },
-    (err: any, token?: string) => {
-      if (err) {
-        res.status(500).json({
-          message: "Error signing token",
-          success: false,
-        });
-        return;
-      }
-      if (!token) {
-        res.status(500).json({
-          message: "Token generation failed",
-          success: false,
-        });
-        return;
-      }
-      res.status(200).json({
-        token,
-        success: true,
-      });
-    }
+    process.env.SECRET_KEY as string,
+    { expiresIn: "1h" }
   );
+  if (!token) {
+    throw new Error("Could not generate token");
+  }
+  return res.status(200).json({
+    message: "Login successful",
+    token,
+    success: true,
+  });
 }
