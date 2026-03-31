@@ -1,12 +1,16 @@
 import { User } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
-export const createUser = async (name: string): Promise<User> => {
+export const createUser = async (
+  name: string,
+  password: string
+): Promise<User> => {
   const initialCategories = ["Supermarket", "Food", "Transport"];
 
   const result = await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: {
         name,
+        password,
       },
     });
     if (!user) {
@@ -37,6 +41,14 @@ export const updateUser = async (userId: number, name: string) => {
       id: userId,
     },
     data: {
+      name,
+    },
+  });
+};
+
+export const getUserByName = async (name: string) => {
+  return await prisma.user.findFirst({
+    where: {
       name,
     },
   });
