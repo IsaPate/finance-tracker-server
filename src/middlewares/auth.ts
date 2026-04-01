@@ -2,6 +2,17 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JwtUserPayload } from "../globals/index";
 
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user as JwtUserPayload;
+  if (user.role === "ADMIN") {
+    return next();
+  }
+  return res.status(403).json({
+    message: "Forbidden. Admin access required.",
+    success: false,
+  });
+};
+
 export const verifyToken = (
   req: Request,
   res: Response,
