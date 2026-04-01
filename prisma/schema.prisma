@@ -13,7 +13,9 @@ datasource db {
 
 model User {
   id      Int   @id @default(autoincrement())
-  name    String 
+  name    String
+  password String 
+  email   String @unique
   transactions Transaction []
   categories Category []
 }
@@ -27,7 +29,7 @@ model Transaction {
   notes     String?
 
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id] , onDelete : Cascade )
 
   categoryId Int?
   category   Category?        @relation(fields: [categoryId], references: [id] , onDelete: SetNull )
@@ -43,7 +45,7 @@ model Category {
     title     String   
     transactions Transaction []
     userId    Int
-    user      User  @relation(fields : [userId] , references : [id])
+    user      User  @relation(fields : [userId] , references : [id] , onDelete : Cascade)
 
     @@unique([title,userId])
 }
