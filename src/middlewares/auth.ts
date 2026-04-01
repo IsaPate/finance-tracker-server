@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { JwtUserPayload } from "../globals/index";
 
 export const verifyToken = (
   req: Request,
@@ -23,7 +24,7 @@ export const verifyToken = (
       });
     }
     const decoded = jwt.verify(bearer, process.env.SECRET_KEY as string);
-    req.user = decoded;
+    req.user = decoded as JwtUserPayload;
     next();
   } catch (error) {
     return res.status(403).json({
