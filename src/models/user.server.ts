@@ -13,6 +13,7 @@ export const createUser = async (
         name,
         password,
         email,
+        role: "USER",
       },
     });
 
