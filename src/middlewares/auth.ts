@@ -3,6 +3,12 @@ import jwt from "jsonwebtoken";
 import { JwtUserPayload } from "../globals/index";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(403).json({
+      message: "Forbidden. No user information found.",
+      success: false,
+    });
+  }
   const user = req.user as JwtUserPayload;
   if (user.role === "ADMIN") {
     return next();
@@ -20,7 +26,7 @@ export const verifyToken = (
 ) => {
   const bearerHeader = req.headers["authorization"];
   if (!bearerHeader) {
-    return res.status(403).json({
+    return res.status(401).json({
       message: "Forbidden. No token provided.",
       success: false,
     });
@@ -29,7 +35,7 @@ export const verifyToken = (
 
   try {
     if (!bearer) {
-      return res.status(403).json({
+      return res.status(401).json({
         message: "Forbidden. Invalid token.",
         success: false,
       });
@@ -38,7 +44,7 @@ export const verifyToken = (
     req.user = decoded as JwtUserPayload;
     next();
   } catch (error) {
-    return res.status(403).json({
+    return res.status(401).json({
       message: "Forbidden. No token provided.",
       success: false,
     });
