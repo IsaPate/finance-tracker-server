@@ -11,7 +11,6 @@ const userRouter = Router();
 
 userRouter.get("/users/:userId", verifyToken, asyncHandler(getUserHandler));
 
-// userRouter.post("/users", asyncHandler(createUserHandler));
+// userRouter.post("/users", verifyToken, asyncHandler(createUserHandler));
 
-userRouter.get("/users", verifyToken, asyncHandler(getAllUserHandler));
 export { userRouter };
