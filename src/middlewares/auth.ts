@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JwtUserPayload } from "../globals/index";
+import { verifyToken } from "../lib/jwt";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
@@ -19,7 +20,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export const verifyToken = (
+export const verifyTokenMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,7 +41,7 @@ export const verifyToken = (
         success: false,
       });
     }
-    const decoded = jwt.verify(bearer, process.env.SECRET_KEY as string);
+    const decoded = verifyToken(bearer);
     req.user = decoded as JwtUserPayload;
     next();
   } catch (error) {
