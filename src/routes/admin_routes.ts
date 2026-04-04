@@ -3,6 +3,7 @@ import {
   createUserHandler,
   getUserHandler,
   getAllUserHandler,
+  deleteUserByIdHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
@@ -25,7 +26,7 @@ adminRouter.delete(
   "/admin/users/:userId",
   verifyTokenMiddleware,
   isAdmin,
-  asyncHandler(deleteUserById)
+  asyncHandler(deleteUserByIdHandler)
 );
 
 //get transactions of all users, maybe with pagination
