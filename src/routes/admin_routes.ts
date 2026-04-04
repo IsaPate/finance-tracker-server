@@ -5,7 +5,7 @@ import {
   getAllUserHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
-import { isAdmin, verifyToken } from "../middlewares/auth";
+import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
 import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
 
@@ -16,40 +16,45 @@ const adminRouter = Router();
 // admin dashboard
 adminRouter.get(
   "/admin/users",
-  verifyToken,
+  verifyTokenMiddleware,
   isAdmin,
   asyncHandler(getAllUserHandler)
 );
 
 adminRouter.delete(
   "/admin/users/:userId",
-  verifyToken,
+  verifyTokenMiddleware,
   isAdmin,
   asyncHandler(deleteUserById)
 );
 
 //get transactions of all users, maybe with pagination
-adminRouter.get("/admin/transactions", verifyToken, isAdmin, () => {});
+adminRouter.get(
+  "/admin/transactions",
+  verifyTokenMiddleware,
+  isAdmin,
+  () => {}
+);
 
 // maybe if i let users create a category
-adminRouter.get("/admin/categories", verifyToken, isAdmin, () => {});
+adminRouter.get("/admin/categories", verifyTokenMiddleware, isAdmin, () => {});
 
 adminRouter.delete(
   "/admin/users/:email",
-  verifyToken,
+  verifyTokenMiddleware,
   isAdmin,
   asyncHandler(deleteUserByEmail)
 );
 
 adminRouter.delete(
   "/admin/users/:userId/categories/:categoryId",
-  verifyToken,
+  verifyTokenMiddleware,
   isAdmin,
   asyncHandler(deleteCategory)
 );
 
 // stats like income / expenses
-adminRouter.get("/admin/stats", verifyToken, isAdmin, () => {
+adminRouter.get("/admin/stats", verifyTokenMiddleware, isAdmin, () => {
   //get users , get transactions make sum for expenses - income and present ration and balance
   // {
   //     global: {

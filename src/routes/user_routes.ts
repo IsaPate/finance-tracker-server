@@ -5,12 +5,16 @@ import {
   getAllUserHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
-import { verifyToken } from "../middlewares/auth";
+import { verifyTokenMiddleware } from "../middlewares/auth";
 
 const userRouter = Router();
 
-userRouter.get("/users/:userId", verifyToken, asyncHandler(getUserHandler));
+userRouter.get(
+  "/users/:userId",
+  verifyTokenMiddleware,
+  asyncHandler(getUserHandler)
+);
 
-// userRouter.post("/users", verifyToken, asyncHandler(createUserHandler));
+// userRouter.post("/users", verifyTokenMiddleware, asyncHandler(createUserHandler));
 
 export { userRouter };
