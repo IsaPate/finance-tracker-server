@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { createUser, getUserByEmail } from "../models/user.server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { generateToken } from "../lib/jwt";
 
 export async function registerUser(
