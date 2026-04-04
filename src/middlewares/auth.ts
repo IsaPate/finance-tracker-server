@@ -4,6 +4,8 @@ import { JwtUserPayload } from "../globals/index";
 import { verifyToken } from "../lib/jwt";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const paramsUserId = Number(req.params.userId);
+  // if(!paramsUserId) {}
   if (!req.user) {
     return res.status(403).json({
       message: "Forbidden. No user information found.",
@@ -11,7 +13,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const user = req.user as JwtUserPayload;
-  if (user.role === "ADMIN") {
+  if (user.role === "ADMIN" && user.userId === paramsUserId) {
     return next();
   }
   return res.status(403).json({
