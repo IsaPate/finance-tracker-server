@@ -16,3 +16,7 @@ export const refreshTokenHandler = async (
   res: Response,
   next: NextFunction
 ) => {};
+
+export const verifyToken = (token: string) => {
+  return jwt.verify(token, process.env.SECRET_KEY as string);
+};
