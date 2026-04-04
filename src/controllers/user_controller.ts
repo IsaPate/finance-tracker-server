@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, getAllUsers, getUserById } from "../models/user.server";
+import {
+  createUser,
+  deleteUserById,
+  getAllUsers,
+  getUserById,
+} from "../models/user.server";
 
 export async function getUserHandler(
   req: Request,
@@ -38,6 +43,7 @@ export async function createUserHandler(
     throw new Error("Could not create user.");
   }
   return res.status(201).json({
+    message: "User created successfully.",
     id: created.id,
     name: created.name,
     success: true,
@@ -51,7 +57,23 @@ export async function getAllUserHandler(
 ) {
   const users = await getAllUsers();
   return res.status(200).json({
+    message: "All users retrieved successfully.",
     users,
+    success: true,
+  });
+}
+
+export async function deleteUserByIdHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.params.userId;
+
+  const deleted = await deleteUserById(Number(userId));
+
+  return res.status(200).json({
+    message: "User deleted successfully.",
     success: true,
   });
 }
