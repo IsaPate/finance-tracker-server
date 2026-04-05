@@ -47,8 +47,12 @@ export const verifyTokenMiddleware = (
     req.user = decoded as JwtUserPayload;
     next();
   } catch (error) {
+    const message =
+      error instanceof jwt.JsonWebTokenError
+        ? "Token expired"
+        : "Invalid token";
     return res.status(401).json({
-      message: "Forbidden. No token provided.",
+      message,
       success: false,
     });
   }
