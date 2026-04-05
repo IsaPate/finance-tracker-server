@@ -16,8 +16,14 @@ model User {
   name    String
   password String 
   email   String @unique
+  role    UserRoleType
   transactions Transaction []
   categories Category []
+}
+
+enum UserRoleType {
+  USER
+  ADMIN
 }
 
 model Transaction {

@@ -13,6 +13,7 @@ export const createUser = async (
         name,
         password,
         email,
+        role: "USER",
       },
     });
 
@@ -62,7 +63,14 @@ export const getUserByEmail = async (email: string) => {
 };
 
 export const getAllUsers = async () => {
-  return prisma.user.findMany();
+  return prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
 };
 
 export const deleteUserById = async (userId: number) => {

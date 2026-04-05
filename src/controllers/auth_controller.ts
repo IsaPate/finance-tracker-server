@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { createUser, getUserByEmail } from "../models/user.server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { generateToken } from "../lib/jwt";
 
 export async function registerUser(
   req: Request,
@@ -44,11 +44,7 @@ export async function loginUser(
     throw new Error("Invalid password");
   }
 
-  const token = jwt.sign(
-    { userId: user.id, email: user.email },
-    process.env.SECRET_KEY as string,
-    { expiresIn: "1h" }
-  );
+  const token = generateToken(user);
   if (!token) {
     throw new Error("Could not generate token");
   }

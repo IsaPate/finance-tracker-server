@@ -4,7 +4,7 @@ import {
   getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/transaction_controller";
-import { verifyToken } from "../middlewares/auth";
+import { verifyTokenMiddleware } from "../middlewares/auth";
 import { asyncHandler } from "../middlewares/handlers";
 import { NextFunction, Router, Request, Response } from "express";
 
@@ -12,25 +12,25 @@ const transactionRouter = Router();
 
 transactionRouter.get(
   "/users/:userId/transactions",
-  verifyToken,
+  verifyTokenMiddleware,
   asyncHandler(getUserTransactionsHandler)
 );
 
 transactionRouter.get(
   "/users/:userId/transactions/:transactionId",
-  verifyToken,
+  verifyTokenMiddleware,
   asyncHandler(getUserTransactionHandler)
 );
 
 transactionRouter.post(
   "/users/:userId/transaction",
-  verifyToken,
+  verifyTokenMiddleware,
   asyncHandler(createTransactionHandler)
 );
 // BULK ACTIONS
 transactionRouter.delete(
   "/users/:userId/transactions",
-  verifyToken,
+  verifyTokenMiddleware,
   asyncHandler(deleteUserTransactionsHandler)
 );
 

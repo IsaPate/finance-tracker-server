@@ -7,6 +7,7 @@ import { userRouter } from "./routes/user_routes";
 import { transactionRouter } from "./routes/transaction_routes";
 import { categoryRouter } from "./routes/category_routes";
 import { authRouter } from "./routes/auth_routes";
+import { adminRouter } from "./routes/admin_routes";
 const app: Application = express();
 const port = process.env.PORT || 3000;
 // Enable URL-encoded form data parsing
@@ -18,7 +19,7 @@ app.use("/auth", authRouter);
 app.use(userRouter);
 app.use(transactionRouter);
 app.use(categoryRouter);
-
+app.use(adminRouter);
 // Basic route
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript + Express!");
