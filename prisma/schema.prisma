@@ -19,6 +19,7 @@ model User {
   role    UserRoleType
   transactions Transaction []
   categories Category []
+  refreshToken RefreshToken []
 }
 
 enum UserRoleType {
@@ -54,4 +55,13 @@ model Category {
     user      User  @relation(fields : [userId] , references : [id] , onDelete : Cascade)
 
     @@unique([title,userId])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
