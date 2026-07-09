@@ -13,10 +13,14 @@ export const generateToken = (user: User) => {
   return signToken(user, "1h", process.env.SECRET_KEY as string);
 };
 
+export const generateRefreshToken = (user: User) => {
+  return signToken(user, "7d", process.env.REFRESH_SECRET_KEY as string);
+};
+
 export const verifyToken = (token: string) => {
   return jwt.verify(token, process.env.SECRET_KEY as string);
 };
 
-export const createRefreshToken = (user: User) => {
-  return signToken(user, "7d", process.env.REFRESH_SECRET_KEY as string);
+export const verifyRefreshToken = (token: string) => {
+  return jwt.verify(token, process.env.REFRESH_SECRET_KEY as string);
 };
