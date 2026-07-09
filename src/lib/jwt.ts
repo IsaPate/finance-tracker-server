@@ -1,22 +1,26 @@
-import { Request, Response, NextFunction } from "express";
-
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
-export const generateToken = (user: User) => {
+const signToken = (user: User, expiresIn: string, secret: string) => {
   return jwt.sign(
     { userId: user.id, email: user.email, role: user.role },
-    process.env.SECRET_KEY as string,
-    { expiresIn: "1h" }
+    secret || "",
+    { expiresIn } as jwt.SignOptions
   );
 };
 
-export const refreshTokenHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {};
+export const generateToken = (user: User) => {
+  return signToken(user, "1h", process.env.SECRET_KEY as string);
+};
+
+export const generateRefreshToken = (user: User) => {
+  return signToken(user, "7d", process.env.REFRESH_SECRET_KEY as string);
+};
 
 export const verifyToken = (token: string) => {
   return jwt.verify(token, process.env.SECRET_KEY as string);
+};
+
+export const verifyRefreshToken = (token: string) => {
+  return jwt.verify(token, process.env.REFRESH_SECRET_KEY as string);
 };

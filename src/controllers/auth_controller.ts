@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { createUser, getUserByEmail } from "../models/user.server";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../lib/jwt";
+import { generateToken, generateRefreshToken } from "../lib/jwt";
+import { createRefreshTokenDB } from "../models/refteshToken.server";
 
 export async function registerUser(
   req: Request,
@@ -48,6 +49,18 @@ export async function loginUser(
   if (!token) {
     throw new Error("Could not generate token");
   }
+  const refreshToken = generateRefreshToken(user);
+  await createRefreshTokenDB(
+    refreshToken,
+    user.email,
+    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  );
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
   return res.status(200).json({
     message: "Login successful",
     token,

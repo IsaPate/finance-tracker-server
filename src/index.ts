@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 import express, { Application, NextFunction, Request, Response } from "express";
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use(userRouter);
 app.use(transactionRouter);
