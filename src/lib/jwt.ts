@@ -17,6 +17,6 @@ export const verifyToken = (token: string) => {
   return jwt.verify(token, process.env.SECRET_KEY as string);
 };
 
-export const createToken = (user: User) => {
+export const createRefreshToken = (user: User) => {
   return signToken(user, "7d", process.env.REFRESH_SECRET_KEY as string);
 };
