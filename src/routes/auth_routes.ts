@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { loginUser, registerUser } from "../controllers/auth_controller";
 import { asyncHandler } from "../middlewares/handlers";
-import { refreshTokenHandler } from "../lib/jwt";
+import { refreshTokenHandler } from "../middlewares/auth";
 
 const authRouter = Router();
 authRouter.post("/register", asyncHandler(registerUser));
