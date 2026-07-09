@@ -11,8 +11,6 @@ import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
 
 const adminRouter = Router();
-// adminRouter.use(verifyToken, isAdmin);
-// adminRouter.get("/admin/users", ...)
 
 // admin dashboard
 adminRouter.get(
