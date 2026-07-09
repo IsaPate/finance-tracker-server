@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { createUser, getUserByEmail } from "../models/user.server";
 import bcrypt from "bcryptjs";
-import { createRefreshToken, generateToken } from "../lib/jwt";
+import { generateToken, generateRefreshToken } from "../lib/jwt";
 import { createRefreshTokenDB } from "../models/refteshToken.server";
 
 export async function registerUser(
@@ -49,7 +49,7 @@ export async function loginUser(
   if (!token) {
     throw new Error("Could not generate token");
   }
-  const refreshToken = createRefreshToken(user);
+  const refreshToken = generateRefreshToken(user);
   await createRefreshTokenDB(
     refreshToken,
     user.email,
