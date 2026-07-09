@@ -15,20 +15,10 @@ export const generateToken = (user: User) => {
   return signToken(user, "1h", process.env.SECRET_KEY as string);
 };
 
-export const refreshTokenHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {};
-
 export const verifyToken = (token: string) => {
   return jwt.verify(token, process.env.SECRET_KEY as string);
 };
 
 export const createToken = (user: User) => {
-  const refreshToken = signToken(
-    user,
-    "7d",
-    process.env.REFRESH_SECRET_KEY as string
-  );
+  return signToken(user, "7d", process.env.REFRESH_SECRET_KEY as string);
 };
