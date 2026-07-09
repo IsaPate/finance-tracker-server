@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma_client";
 
-export const createRefreshToken = async (
+export const createRefreshTokenDB = async (
   refreshToken: string,
   email: string,
   expiresAt: Date
@@ -18,7 +18,7 @@ export const createRefreshToken = async (
   });
 };
 
-export const findRefreshToken = async (token: string) => {
+export const findRefreshTokenDB = async (token: string) => {
   return prisma.refreshToken.findUnique({
     where: {
       token,
@@ -26,7 +26,7 @@ export const findRefreshToken = async (token: string) => {
   });
 };
 
-export const deleteRefreshToken = async (token: string) => {
+export const deleteRefreshTokenDB = async (token: string) => {
   return prisma.refreshToken.delete({
     where: {
       token,
