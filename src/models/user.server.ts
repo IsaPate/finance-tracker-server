@@ -70,6 +70,9 @@ export const getAllUsers = async () => {
       email: true,
       role: true,
     },
+    where: {
+      role: "USER",
+    },
   });
 };
 
