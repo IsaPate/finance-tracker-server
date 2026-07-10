@@ -59,7 +59,7 @@ export const verifyTokenMiddleware = (
   } catch (error) {
     const message =
       error instanceof jwt.JsonWebTokenError
-        ? "Token Error."
+        ? "Invalid token."
         : error instanceof jwt.TokenExpiredError
         ? "Token expired"
         : "Generic token error";
