@@ -16,6 +16,4 @@ userRouter.get(
   asyncHandler(getUserHandler)
 );
 
-// userRouter.post("/users", verifyTokenMiddleware, asyncHandler(createUserHandler));
-
 export { userRouter };
