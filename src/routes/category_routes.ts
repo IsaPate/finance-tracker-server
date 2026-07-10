@@ -8,7 +8,7 @@ import {
   getTransactionsByUserIdAndCategoryIdHandler,
   getUserCategoriesHandler,
 } from "../controllers/category_controller";
-import { verifyTokenMiddleware } from "../middlewares/auth";
+import { isSelfUser, verifyTokenMiddleware } from "../middlewares/auth";
 
 const categoryRouter = Router();
 
@@ -16,35 +16,41 @@ const categoryRouter = Router();
 categoryRouter.get(
   "/users/:userId/categories/:categoryId",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(getCategoryHandler)
 );
 
 categoryRouter.put(
   "/users/:userId/categories/:categoryId",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(editCategoryHandler)
 );
 
 categoryRouter.delete(
   "/users/:userId/categories/:categoryId",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(deleteCategoryHandler)
 );
 // USER CATEGORIES
 categoryRouter.get(
   "/users/:userId/categories",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(getUserCategoriesHandler)
 );
 categoryRouter.post(
   "/users/:userId/categories",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(createCategoryHandler)
 );
 // USER TRANSACTIONS CATEGORIES
 categoryRouter.get(
   "/users/:userId/categories/:categoryId/transactions",
   verifyTokenMiddleware,
+  isSelfUser,
   asyncHandler(getTransactionsByUserIdAndCategoryIdHandler)
 );
 export { categoryRouter };

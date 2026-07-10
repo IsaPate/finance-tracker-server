@@ -3,6 +3,7 @@ import { createUser, getUserById } from "../models/user.server";
 
 import {
   createTransaction,
+  createTransactions,
   deleteTransactions,
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
@@ -118,7 +119,7 @@ export async function getUserTransactionsHandler(
     success: true,
   });
 }
-export async function deleteUserTransactionsHandler(
+export async function bulkTransactionsDelete(
   req: Request,
   res: Response,
   next: NextFunction
@@ -126,10 +127,7 @@ export async function deleteUserTransactionsHandler(
   const userId = req.params.userId;
   const transactionIds = req.body.transactionIds;
   // validate them
-  await deleteTransactions(
-    transactionIds.map((t: string) => Number(t)),
-    Number(userId)
-  ); // result.count number
+  await deleteTransactions(transactionIds, Number(userId)); // result.count number
   return res.status(200).json({
     message: "Transactions deleted",
     success: true,
@@ -141,3 +139,17 @@ export async function editUserTransactions(
   res: Response,
   next: NextFunction
 ) {}
+
+export async function bulkTransactionsCreate(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { transactions } = req.body;
+  const userId = req.user?.userId;
+  await createTransactions(transactions, Number(userId));
+  return res.status(201).json({
+    message: "Transactions created.",
+    success: true,
+  });
+}

@@ -5,6 +5,7 @@ import {
   verifyToken,
   verifyRefreshToken,
   generateRefreshToken,
+  generateToken,
 } from "../lib/jwt";
 import { User } from "@prisma/client";
 import {
@@ -14,9 +15,24 @@ import {
 } from "../models/refteshToken.server";
 import { getUserById } from "../models/user.server";
 
+export const isSelfUser = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(403).json({
+      message: "Forbidden. No user information found.",
+      success: false,
+    });
+  }
+  const userId = req.user.userId;
+  if (userId !== Number(req.params.userId)) {
+    return res.status(403).json({
+      message: "Forbidden. You can only access your own resources.",
+      success: false,
+    });
+  }
+  return next();
+};
+
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const paramsUserId = Number(req.params.userId);
-  // if(!paramsUserId) {}
   if (!req.user) {
     return res.status(403).json({
       message: "Forbidden. No user information found.",
@@ -24,7 +40,8 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const user = req.user as JwtUserPayload;
-  if (user.role === "ADMIN" && user.userId === paramsUserId) {
+  console.log(user);
+  if (user.role === "ADMIN") {
     return next();
   }
   return res.status(403).json({
@@ -60,7 +77,7 @@ export const verifyTokenMiddleware = (
   } catch (error) {
     const message =
       error instanceof jwt.JsonWebTokenError
-        ? "Token Error."
+        ? "Invalid token."
         : error instanceof jwt.TokenExpiredError
         ? "Token expired"
         : "Generic token error";
@@ -84,9 +101,7 @@ export const refreshTokenHandler = async (
         success: false,
       });
     const refreshToken = cookies.refreshToken;
-    //check if the signature is ok
     const verified = verifyRefreshToken(refreshToken) as JwtUserPayload;
-    // retrieve the refresh from db
     const refreshTokenDb = await findRefreshTokenDB(refreshToken);
     if (!refreshTokenDb) {
       return res.status(401).json({
@@ -102,29 +117,29 @@ export const refreshTokenHandler = async (
       });
     }
 
-    //generate the refresh with user
-    const generated = generateRefreshToken({
+    const newAccessToken = generateToken(user);
+    const generatedRefreshToken = generateRefreshToken({
       id: verified.userId,
       role: verified.role,
       email: verified.email,
     } as User);
 
     await createRefreshTokenDB(
-      generated,
+      generatedRefreshToken,
       user.email,
       new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     );
 
     await deleteRefreshTokenDB(refreshToken);
 
-    res.cookie("refreshToken", generated, {
+    res.cookie("refreshToken", generatedRefreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(201).json({
-      token: generated,
+      token: newAccessToken,
       success: true,
     });
   } catch (error) {
@@ -141,4 +156,31 @@ export const refreshTokenHandler = async (
       success: false,
     });
   }
+};
+
+export const logoutHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const cookie = req.cookies;
+  if (!cookie?.refreshToken) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+  const refreshedToken = cookie.refreshToken;
+  if (!refreshedToken) {
+    return res.status(403).json({
+      message: "Bad Request.",
+      success: false,
+    });
+  }
+  await deleteRefreshTokenDB(refreshedToken);
+  res.clearCookie("refreshToken");
+  return res.status(200).json({
+    message: "Logout successful",
+    success: true,
+  });
 };
