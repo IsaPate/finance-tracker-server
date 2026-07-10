@@ -5,13 +5,14 @@ import {
   getAllUserHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
-import { verifyTokenMiddleware } from "../middlewares/auth";
+import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
 
 const userRouter = Router();
 
 userRouter.get(
   "/users/:userId",
   verifyTokenMiddleware,
+  isAdmin,
   asyncHandler(getUserHandler)
 );
 
