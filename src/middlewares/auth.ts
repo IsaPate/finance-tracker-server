@@ -14,8 +14,24 @@ import {
 } from "../models/refteshToken.server";
 import { getUserById } from "../models/user.server";
 
+export const isSelfUser = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(403).json({
+      message: "Forbidden. No user information found.",
+      success: false,
+    });
+  }
+  const userId = req.user.userId;
+  if (userId !== Number(req.params.userId)) {
+    return res.status(403).json({
+      message: "Forbidden. You can only access your own resources.",
+      success: false,
+    });
+  }
+  return next();
+};
+
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  // const paramsUserId = Number(req.params.userId);
   if (!req.user) {
     return res.status(403).json({
       message: "Forbidden. No user information found.",
