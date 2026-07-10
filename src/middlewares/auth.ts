@@ -119,9 +119,9 @@ export const refreshTokenHandler = async (
 
     const newAccessToken = generateToken(user);
     const generatedRefreshToken = generateRefreshToken({
-      id: verified.userId,
-      role: verified.role,
-      email: verified.email,
+      id: user.id,
+      role: user.role,
+      email: user.email,
     } as User);
 
     await createRefreshTokenDB(
