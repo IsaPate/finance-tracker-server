@@ -1,7 +1,7 @@
 import {
   bulkTransactionsCreate,
   createTransactionHandler,
-  deleteUserTransactionsHandler,
+  bulkTransactionsDelete,
   getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/transaction_controller";
@@ -40,7 +40,7 @@ transactionRouter.delete(
   "/users/:userId/transactions",
   verifyTokenMiddleware,
   isAdmin,
-  asyncHandler(deleteUserTransactionsHandler)
+  asyncHandler(bulkTransactionsDelete)
 );
 
 transactionRouter.post(

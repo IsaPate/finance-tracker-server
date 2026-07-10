@@ -119,7 +119,7 @@ export async function getUserTransactionsHandler(
     success: true,
   });
 }
-export async function deleteUserTransactionsHandler(
+export async function bulkTransactionsDelete(
   req: Request,
   res: Response,
   next: NextFunction
@@ -127,10 +127,7 @@ export async function deleteUserTransactionsHandler(
   const userId = req.params.userId;
   const transactionIds = req.body.transactionIds;
   // validate them
-  await deleteTransactions(
-    transactionIds.map((t: string) => Number(t)),
-    Number(userId)
-  ); // result.count number
+  await deleteTransactions(transactionIds, Number(userId)); // result.count number
   return res.status(200).json({
     message: "Transactions deleted",
     success: true,
