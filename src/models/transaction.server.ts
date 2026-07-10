@@ -1,4 +1,4 @@
-import { $Enums } from "@prisma/client";
+import { $Enums, Transaction } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
 
 export const createTransaction = async (
@@ -97,5 +97,14 @@ export const udpateTransactions = async (
   return prisma.transaction.updateMany({
     data: {},
     where: { userId, id: { in: transactionIds } },
+  });
+};
+
+export const createTransactions = async (
+  transactions: Omit<Transaction, "id">[],
+  userId: number
+) => {
+  return prisma.transaction.createMany({
+    data: transactions.map((t) => ({ ...t, userId })),
   });
 };
