@@ -90,13 +90,18 @@ export const deleteTransactions = async (
   });
 };
 //perhaps delete it
-export const udpateTransactions = async (
-  transactionIds: number[],
-  userId: number
+export const updateTransaction = async (
+  transactionId: number,
+  userId: number,
+  title?: string,
+  amount?: number
 ) => {
   return prisma.transaction.updateMany({
-    data: {},
-    where: { userId, id: { in: transactionIds } },
+    data: {
+      title,
+      amount,
+    },
+    where: { userId, id: transactionId },
   });
 };
 
@@ -107,4 +112,8 @@ export const createTransactions = async (
   return prisma.transaction.createMany({
     data: transactions.map((t) => ({ ...t, userId })),
   });
+};
+
+export const getAllTransactions = async () => {
+  return prisma.transaction.findMany();
 };
