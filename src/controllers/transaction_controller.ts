@@ -3,6 +3,7 @@ import { createUser, getUserById } from "../models/user.server";
 
 import {
   createTransaction,
+  createTransactions,
   deleteTransactions,
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
@@ -141,3 +142,17 @@ export async function editUserTransactions(
   res: Response,
   next: NextFunction
 ) {}
+
+export async function bulkTransactionsCreate(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { transactions } = req.body;
+  const userId = req.user?.userId;
+  await createTransactions(transactions, Number(userId));
+  return res.status(201).json({
+    message: "Transactions created.",
+    success: true,
+  });
+}
