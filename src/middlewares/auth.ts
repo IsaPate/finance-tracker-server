@@ -5,6 +5,7 @@ import {
   verifyToken,
   verifyRefreshToken,
   generateRefreshToken,
+  generateToken,
 } from "../lib/jwt";
 import { User } from "@prisma/client";
 import {
@@ -39,6 +40,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const user = req.user as JwtUserPayload;
+  console.log(user);
   if (user.role === "ADMIN") {
     return next();
   }
@@ -99,9 +101,7 @@ export const refreshTokenHandler = async (
         success: false,
       });
     const refreshToken = cookies.refreshToken;
-    //check if the signature is ok
     const verified = verifyRefreshToken(refreshToken) as JwtUserPayload;
-    // retrieve the refresh from db
     const refreshTokenDb = await findRefreshTokenDB(refreshToken);
     if (!refreshTokenDb) {
       return res.status(401).json({
@@ -117,29 +117,29 @@ export const refreshTokenHandler = async (
       });
     }
 
-    //generate the refresh with user
-    const generated = generateRefreshToken({
+    const newAccessToken = generateToken(user);
+    const generatedRefreshToken = generateRefreshToken({
       id: verified.userId,
       role: verified.role,
       email: verified.email,
     } as User);
 
     await createRefreshTokenDB(
-      generated,
+      generatedRefreshToken,
       user.email,
       new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     );
 
     await deleteRefreshTokenDB(refreshToken);
 
-    res.cookie("refreshToken", generated, {
+    res.cookie("refreshToken", generatedRefreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(201).json({
-      token: generated,
+      token: newAccessToken,
       success: true,
     });
   } catch (error) {
