@@ -1,10 +1,15 @@
 import {
+  bulkTransactionsCreate,
   createTransactionHandler,
   deleteUserTransactionsHandler,
   getUserTransactionHandler,
   getUserTransactionsHandler,
 } from "../controllers/transaction_controller";
-import { isSelfUser, verifyTokenMiddleware } from "../middlewares/auth";
+import {
+  isAdmin,
+  isSelfUser,
+  verifyTokenMiddleware,
+} from "../middlewares/auth";
 import { asyncHandler } from "../middlewares/handlers";
 import { NextFunction, Router, Request, Response } from "express";
 
@@ -34,7 +39,14 @@ transactionRouter.post(
 transactionRouter.delete(
   "/users/:userId/transactions",
   verifyTokenMiddleware,
+  isAdmin,
   asyncHandler(deleteUserTransactionsHandler)
 );
 
+transactionRouter.post(
+  "/users/:userId/transactions",
+  verifyTokenMiddleware,
+  isAdmin,
+  asyncHandler(bulkTransactionsCreate)
+);
 export { transactionRouter };
