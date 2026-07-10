@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   createUser,
+  deleteUserByEmail,
   deleteUserById,
   getAllUsers,
   getUserById,
@@ -72,6 +73,19 @@ export async function deleteUserByIdHandler(
 
   const deleted = await deleteUserById(Number(userId));
 
+  return res.status(200).json({
+    message: "User deleted successfully.",
+    success: true,
+  });
+}
+
+export async function deleteUserByEmailHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email } = req.body;
+  await deleteUserByEmail(email);
   return res.status(200).json({
     message: "User deleted successfully.",
     success: true,

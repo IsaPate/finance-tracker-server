@@ -4,6 +4,7 @@ import {
   getUserHandler,
   getAllUserHandler,
   deleteUserByIdHandler,
+  deleteUserByEmailHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
@@ -43,7 +44,7 @@ adminRouter.delete(
   "/admin/users/:email",
   verifyTokenMiddleware,
   isAdmin,
-  asyncHandler(deleteUserByEmail)
+  asyncHandler(deleteUserByEmailHandler)
 );
 
 adminRouter.delete(
