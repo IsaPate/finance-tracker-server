@@ -40,10 +40,11 @@ export const updateCategory = async (categoryId: number, newTitle: string) => {
   });
 };
 
-export const deleteCategory = async (categoryId: number) => {
+export const deleteCategory = async (categoryId: number, userId: number) => {
   return await prisma.category.delete({
     where: {
       id: categoryId,
+      userId,
     },
   });
 };

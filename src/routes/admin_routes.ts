@@ -9,6 +9,7 @@ import { asyncHandler } from "../middlewares/handlers";
 import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
 import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
+import { deleteCategoryHandler } from "../controllers/category_controller";
 
 const adminRouter = Router();
 
@@ -49,7 +50,7 @@ adminRouter.delete(
   "/admin/users/:userId/categories/:categoryId",
   verifyTokenMiddleware,
   isAdmin,
-  asyncHandler(deleteCategory)
+  asyncHandler(deleteCategoryHandler)
 );
 
 // stats like income / expenses

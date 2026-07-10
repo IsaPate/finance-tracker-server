@@ -45,9 +45,9 @@ export async function deleteCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { categoryId } = req.params;
+  const { userId, categoryId } = req.params;
 
-  await deleteCategory(Number(categoryId));
+  await deleteCategory(Number(categoryId), Number(userId));
   return res.status(200).json({
     message: "Category deleted.",
     success: true,
