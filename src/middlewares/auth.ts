@@ -15,8 +15,7 @@ import {
 import { getUserById } from "../models/user.server";
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const paramsUserId = Number(req.params.userId);
-  // if(!paramsUserId) {}
+  // const paramsUserId = Number(req.params.userId);
   if (!req.user) {
     return res.status(403).json({
       message: "Forbidden. No user information found.",
@@ -24,7 +23,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const user = req.user as JwtUserPayload;
-  if (user.role === "ADMIN" && user.userId === paramsUserId) {
+  if (user.role === "ADMIN") {
     return next();
   }
   return res.status(403).json({
@@ -141,4 +140,31 @@ export const refreshTokenHandler = async (
       success: false,
     });
   }
+};
+
+export const logoutHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const cookie = req.cookies;
+  if (!cookie?.refreshToken) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+  const refreshedToken = cookie.refreshToken;
+  if (!refreshedToken) {
+    return res.status(403).json({
+      message: "Bad Request.",
+      success: false,
+    });
+  }
+  await deleteRefreshTokenDB(refreshedToken);
+  res.clearCookie("refreshToken");
+  return res.status(200).json({
+    message: "Logout successful",
+    success: true,
+  });
 };
