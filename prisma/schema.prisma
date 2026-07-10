@@ -40,6 +40,9 @@ model Transaction {
 
   categoryId Int?
   category   Category?        @relation(fields: [categoryId], references: [id] , onDelete: SetNull )
+
+  @@index([userId, createdAt])
+
 }
 
 enum TransactionType {
