@@ -114,6 +114,21 @@ export const createTransactions = async (
   });
 };
 
-export const getAllTransactions = async () => {
-  return prisma.transaction.findMany();
+export const getAllTransactions = async (
+  page: number,
+  limit: number,
+  cursorId: number | null
+) => {
+  const cursorDepended = {
+    cursorId: cursorId ? { id: cursorId } : undefined,
+    skip: cursorId ? 1 : 0,
+  };
+  return prisma.transaction.findMany({
+    take: limit + 1,
+    skip: cursorDepended.skip,
+    orderBy: {
+      createdAt: "desc",
+    },
+    cursor: cursorDepended.cursorId,
+  });
 };
