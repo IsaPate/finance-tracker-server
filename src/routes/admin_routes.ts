@@ -11,6 +11,7 @@ import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
 import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
 import { deleteCategoryHandler } from "../controllers/category_controller";
+import { adminGetAllTransactions } from "../controllers/transaction_controller";
 
 const adminRouter = Router();
 
@@ -34,7 +35,7 @@ adminRouter.get(
   "/admin/transactions",
   verifyTokenMiddleware,
   isAdmin,
-  () => {}
+  asyncHandler(adminGetAllTransactions)
 );
 
 // maybe if i let users create a category
