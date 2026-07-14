@@ -1,15 +1,12 @@
 import { Router } from "express";
 import {
-  createUserHandler,
-  getUserHandler,
   getAllUserHandler,
   deleteUserByIdHandler,
   deleteUserByEmailHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
-import { deleteUserByEmail, deleteUserById } from "../models/user.server";
-import { deleteCategory } from "../models/category.server";
+
 import {
   deleteCategoryHandler,
   adminGetAllCategories,
@@ -66,26 +63,5 @@ adminRouter.delete(
 // stats like income / expenses
 adminRouter.get("/admin/stats", verifyTokenMiddleware, isAdmin, () => {
   //get users , get transactions make sum for expenses - income and present ration and balance
-  // {
-  //     global: {
-  //       totalUsers,
-  //       totalTransactions,
-  //       totalIncome,
-  //       totalExpenses,
-  //       netBalance,
-  //       expenseToIncomeRatio
-  //     },
-  //     users: [
-  //       {
-  //         userId,
-  //         totalIncome,
-  //         totalExpenses,
-  //         totalTransactions,
-  //         balance,
-  //         expenseRatio,
-  //         incomeRatio
-  //       }
-  //     ]
-  //   }
 });
 export { adminRouter };
