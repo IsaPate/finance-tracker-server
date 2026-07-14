@@ -154,3 +154,7 @@ export const getTransactionSumByType = async (type: $Enums.TransactionType) => {
     },
   });
 };
+
+export const getTransactionsCount = async () => {
+  return await prisma.transaction.count();
+};
