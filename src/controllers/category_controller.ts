@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   createCategory,
   deleteCategory,
+  getCategoriesByUser,
   getCategoryById,
   getCategoryByTitle,
   getUserCategories,
@@ -45,9 +46,9 @@ export async function deleteCategoryHandler(
   res: Response,
   next: NextFunction
 ) {
-  const { categoryId } = req.params;
+  const { userId, categoryId } = req.params;
 
-  await deleteCategory(Number(categoryId));
+  await deleteCategory(Number(categoryId), Number(userId));
   return res.status(200).json({
     message: "Category deleted.",
     success: true,
@@ -110,6 +111,33 @@ export async function getTransactionsByUserIdAndCategoryIdHandler(
   return res.status(200).json({
     message: "Transactions found.",
     data: transactions,
+    success: true,
+  });
+}
+
+export async function adminGetAllCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 10;
+  const cursor = req.query.cursor;
+
+  const categories = await getCategoriesByUser(
+    Number(page),
+    Number(limit),
+    cursor ? Number(cursor) : null
+  );
+  let hasNext = Number(limit) < categories.length;
+  return res.status(200).json({
+    data: {
+      page,
+      limit,
+      hasNext,
+      cursor: hasNext ? categories[Number(limit) - 1].id : null,
+      pageData: categories.slice(0, Number(limit)),
+    },
     success: true,
   });
 }

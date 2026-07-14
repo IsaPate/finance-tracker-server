@@ -90,13 +90,18 @@ export const deleteTransactions = async (
   });
 };
 //perhaps delete it
-export const udpateTransactions = async (
-  transactionIds: number[],
-  userId: number
+export const updateTransaction = async (
+  transactionId: number,
+  userId: number,
+  title?: string,
+  amount?: number
 ) => {
   return prisma.transaction.updateMany({
-    data: {},
-    where: { userId, id: { in: transactionIds } },
+    data: {
+      title,
+      amount,
+    },
+    where: { userId, id: transactionId },
   });
 };
 
@@ -106,5 +111,56 @@ export const createTransactions = async (
 ) => {
   return prisma.transaction.createMany({
     data: transactions.map((t) => ({ ...t, userId })),
+  });
+};
+
+export const getAllTransactions = async (
+  page: number,
+  limit: number,
+  cursorId: number | null
+) => {
+  const cursorDepended = {
+    cursorId: cursorId ? { id: cursorId } : undefined,
+    skip: cursorId ? 1 : 0,
+  };
+  return prisma.transaction.findMany({
+    take: limit + 1,
+    skip: cursorDepended.skip,
+    orderBy: {
+      id: "asc",
+    },
+    cursor: cursorDepended.cursorId,
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+};
+
+export const getTransactionSumByType = async (type: $Enums.TransactionType) => {
+  return await prisma.transaction.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      user: {
+        role: "USER",
+      },
+      type,
+    },
+  });
+};
+
+export const getTransactionsCount = async (role: $Enums.UserRoleType) => {
+  return await prisma.transaction.count({
+    where: {
+      user: {
+        role,
+      },
+    },
   });
 };

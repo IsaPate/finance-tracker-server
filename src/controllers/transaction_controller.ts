@@ -5,10 +5,13 @@ import {
   createTransaction,
   createTransactions,
   deleteTransactions,
+  getAllTransactions,
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
+  updateTransaction,
 } from "../models/transaction.server";
 import { getCategoryByTitle } from "../models/category.server";
+import { Transaction } from "@prisma/client";
 export async function getUserTransactionHandler(
   req: Request,
   res: Response,
@@ -61,7 +64,7 @@ export async function createTransactionHandler(
   }
 
   const date = new Date(createdAt.split("T")[0]);
-  if (!date) {
+  if (isNaN(date.getTime())) {
     return res.status(400).json({
       message: "Date is missing.",
       success: false,
@@ -138,7 +141,21 @@ export async function editUserTransactions(
   req: Request,
   res: Response,
   next: NextFunction
-) {}
+) {
+  const { userId, transactionId } = req.params;
+  const { title, amount } = req.body;
+
+  const updated = await updateTransaction(
+    Number(userId),
+    Number(transactionId),
+    title,
+    amount
+  );
+  return res.status(201).json({
+    message: "Transactions updated",
+    success: true,
+  });
+}
 
 export async function bulkTransactionsCreate(
   req: Request,
@@ -150,6 +167,39 @@ export async function bulkTransactionsCreate(
   await createTransactions(transactions, Number(userId));
   return res.status(201).json({
     message: "Transactions created.",
+    success: true,
+  });
+}
+
+export async function adminGetAllTransactions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  //add pagination here
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 10;
+  let cursor = req.query.cursor;
+
+  // let cursor = null;
+  let records: Transaction[] = [];
+  let hasNext = true;
+
+  const transactions = await getAllTransactions(
+    Number(page),
+    Number(limit),
+    cursor ? Number(cursor) : null
+  );
+  records = [...transactions];
+  hasNext = records.length > Number(limit);
+  return res.status(200).json({
+    data: {
+      page,
+      limit,
+      hasNext,
+      cursor: hasNext ? transactions[Number(limit) - 1].id : null,
+      pageData: transactions.slice(0, Number(limit)),
+    },
     success: true,
   });
 }
