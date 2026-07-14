@@ -1,5 +1,9 @@
-import { User } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
+import {
+  getTransactionsCount,
+  getTransactionSumByType,
+} from "./transaction.server";
 export const createUser = async (
   name: string,
   password: string,
@@ -88,6 +92,14 @@ export const deleteUserByEmail = async (email: string) => {
   return await prisma.user.delete({
     where: {
       email,
+    },
+  });
+};
+
+export const getUsersByRole = async (role: $Enums.UserRoleType) => {
+  return await prisma.user.count({
+    where: {
+      role,
     },
   });
 };
