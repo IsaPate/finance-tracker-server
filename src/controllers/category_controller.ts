@@ -129,7 +129,7 @@ export async function adminGetAllCategories(
     Number(limit),
     cursor ? Number(cursor) : null
   );
-  let hasNext = Number(limit) > categories.length;
+  let hasNext = Number(limit) < categories.length;
   return res.status(200).json({
     data: {
       page,
