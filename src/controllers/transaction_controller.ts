@@ -197,6 +197,7 @@ export async function adminGetAllTransactions(
       page,
       limit,
       hasNext,
+      cursor: hasNext ? transactions[Number(limit) - 1].id : null,
       pageData: transactions.slice(0, Number(limit)),
     },
     success: true,
