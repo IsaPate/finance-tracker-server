@@ -12,6 +12,7 @@ import {
   adminGetAllCategories,
 } from "../controllers/category_controller";
 import { adminGetAllTransactions } from "../controllers/transaction_controller";
+import { adminGetTotalStatistics } from "../controllers/admin_controller";
 
 const adminRouter = Router();
 
@@ -61,7 +62,10 @@ adminRouter.delete(
 );
 
 // stats like income / expenses
-adminRouter.get("/admin/stats", verifyTokenMiddleware, isAdmin, () => {
-  //get users , get transactions make sum for expenses - income and present ration and balance
-});
+adminRouter.get(
+  "/admin/stats",
+  verifyTokenMiddleware,
+  isAdmin,
+  asyncHandler(adminGetTotalStatistics)
+);
 export { adminRouter };
