@@ -127,8 +127,16 @@ export const getAllTransactions = async (
     take: limit + 1,
     skip: cursorDepended.skip,
     orderBy: {
-      createdAt: "desc",
+      id: "asc",
     },
     cursor: cursorDepended.cursorId,
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
   });
 };
