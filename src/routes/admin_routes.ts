@@ -12,7 +12,7 @@ import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
 import {
   deleteCategoryHandler,
-  getAllCategories,
+  adminGetAllCategories,
 } from "../controllers/category_controller";
 import { adminGetAllTransactions } from "../controllers/transaction_controller";
 
@@ -46,7 +46,7 @@ adminRouter.get(
   "/admin/categories",
   verifyTokenMiddleware,
   isAdmin,
-  asyncHandler(getAllCategories)
+  asyncHandler(adminGetAllCategories)
 );
 
 adminRouter.delete(

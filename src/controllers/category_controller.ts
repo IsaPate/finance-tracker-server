@@ -115,7 +115,7 @@ export async function getTransactionsByUserIdAndCategoryIdHandler(
   });
 }
 
-export async function getAllCategories(
+export async function adminGetAllCategories(
   req: Request,
   res: Response,
   next: NextFunction
