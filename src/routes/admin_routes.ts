@@ -10,7 +10,10 @@ import { asyncHandler } from "../middlewares/handlers";
 import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
 import { deleteUserByEmail, deleteUserById } from "../models/user.server";
 import { deleteCategory } from "../models/category.server";
-import { deleteCategoryHandler } from "../controllers/category_controller";
+import {
+  deleteCategoryHandler,
+  getAllCategories,
+} from "../controllers/category_controller";
 import { adminGetAllTransactions } from "../controllers/transaction_controller";
 
 const adminRouter = Router();
@@ -39,7 +42,12 @@ adminRouter.get(
 );
 
 // maybe if i let users create a category
-adminRouter.get("/admin/categories", verifyTokenMiddleware, isAdmin, () => {});
+adminRouter.get(
+  "/admin/categories",
+  verifyTokenMiddleware,
+  isAdmin,
+  asyncHandler(getAllCategories)
+);
 
 adminRouter.delete(
   "/admin/users/:email",
