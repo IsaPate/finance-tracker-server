@@ -140,3 +140,17 @@ export const getAllTransactions = async (
     },
   });
 };
+
+export const getTransactionSumByType = async (type: $Enums.TransactionType) => {
+  return await prisma.transaction.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      user: {
+        role: "USER",
+      },
+      type,
+    },
+  });
+};
