@@ -75,3 +75,28 @@ export const getUserTransactionsByCategory = async (
     },
   });
 };
+
+export const getCategoriesByUser = async (
+  page: number,
+  limit: number,
+  cursorId: Number | null
+) => {
+  const cursorDepends = {
+    cursorId: cursorId ? { id: Number(cursorId) } : undefined,
+    skip: cursorId ? 1 : 0,
+  };
+  return await prisma.category.findMany({
+    take: limit + 1,
+    skip: cursorDepends.skip,
+    cursor: cursorDepends.cursorId,
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+};
