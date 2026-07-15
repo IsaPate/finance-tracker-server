@@ -9,6 +9,8 @@ import {
   getUserCategoriesHandler,
 } from "../controllers/category_controller";
 import { isSelfUser, verifyTokenMiddleware } from "../middlewares/auth";
+import { validationMiddleware } from "../middlewares/validate";
+import { categorySchema } from "../schemas/category.schema";
 
 const categoryRouter = Router();
 
@@ -44,6 +46,7 @@ categoryRouter.post(
   "/users/:userId/categories",
   verifyTokenMiddleware,
   isSelfUser,
+  validationMiddleware(categorySchema),
   asyncHandler(createCategoryHandler)
 );
 // USER TRANSACTIONS CATEGORIES
