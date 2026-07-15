@@ -12,6 +12,8 @@ import {
 } from "../middlewares/auth";
 import { asyncHandler } from "../middlewares/handlers";
 import { NextFunction, Router, Request, Response } from "express";
+import { validationMiddleware } from "../middlewares/validate";
+import { transactionSchema } from "../schemas/transaction.schema";
 
 const transactionRouter = Router();
 
@@ -33,6 +35,7 @@ transactionRouter.post(
   "/users/:userId/transaction",
   verifyTokenMiddleware,
   isSelfUser,
+  validationMiddleware(transactionSchema),
   asyncHandler(createTransactionHandler)
 );
 // BULK ACTIONS
