@@ -151,6 +151,9 @@ export async function editUserTransactions(
     title,
     amount
   );
+  if (updated.count === 0) {
+    throw new Error("Transaction not found.");
+  }
   return res.status(200).json({
     message: "Transactions updated",
     success: true,
