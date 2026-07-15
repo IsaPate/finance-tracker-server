@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import pino from "pino";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { JwtUserPayload } from "../globals/index";
 import {
@@ -15,6 +16,7 @@ import {
 } from "../models/refteshToken.server";
 import { getUserById } from "../models/user.server";
 
+const logger = pino();
 export const isSelfUser = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
     return res.status(403).json({
@@ -23,6 +25,8 @@ export const isSelfUser = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const userId = req.user.userId;
+  logger.info(`ID ${userId} has logged in as normal user.`);
+
   if (userId !== Number(req.params.userId)) {
     return res.status(403).json({
       message: "Forbidden. You can only access your own resources.",
@@ -40,7 +44,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
   const user = req.user as JwtUserPayload;
-  console.log(user);
+  logger.info(`ID ${user.userId} has logged in with admin.`);
   if (user.role === "ADMIN") {
     return next();
   }
