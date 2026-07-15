@@ -15,8 +15,8 @@ import {
   findRefreshTokenDB,
 } from "../models/refteshToken.server";
 import { getUserById } from "../models/user.server";
+import { logger } from "../lib/logger";
 
-const logger = pino();
 export const isSelfUser = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
     return res.status(403).json({
