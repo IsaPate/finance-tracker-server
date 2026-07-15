@@ -14,3 +14,7 @@ export const transactionSchema = z.object({
 export const bulkTransactionSchema = z.object({
   transactions: z.array(transactionSchema),
 });
+
+export const bulkTransactionsDeleteSchema = z.object({
+  transactionIds: z.array(z.number()).min(1, "At least one id required"),
+});
