@@ -91,8 +91,8 @@ export const deleteTransactions = async (
 };
 //perhaps delete it
 export const updateTransaction = async (
-  transactionId: number,
   userId: number,
+  transactionId: number,
   title?: string,
   amount?: number
 ) => {

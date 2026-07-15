@@ -4,6 +4,7 @@ import {
   bulkTransactionsDelete,
   getUserTransactionHandler,
   getUserTransactionsHandler,
+  editUserTransactions,
 } from "../controllers/transaction_controller";
 import {
   isAdmin,
@@ -16,6 +17,7 @@ import { validationMiddleware } from "../middlewares/validate";
 import {
   bulkTransactionSchema,
   bulkTransactionsDeleteSchema,
+  editTransactionSchema,
   transactionSchema,
 } from "../schemas/transaction.schema";
 
@@ -41,6 +43,14 @@ transactionRouter.post(
   isSelfUser,
   validationMiddleware(transactionSchema),
   asyncHandler(createTransactionHandler)
+);
+
+transactionRouter.put(
+  "/users/:userId/transaction/:transactionId",
+  verifyTokenMiddleware,
+  isSelfUser,
+  validationMiddleware(editTransactionSchema),
+  asyncHandler(editUserTransactions)
 );
 // BULK ACTIONS
 transactionRouter.delete(
