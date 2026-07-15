@@ -15,6 +15,7 @@ import { NextFunction, Router, Request, Response } from "express";
 import { validationMiddleware } from "../middlewares/validate";
 import {
   bulkTransactionSchema,
+  bulkTransactionsDeleteSchema,
   transactionSchema,
 } from "../schemas/transaction.schema";
 
@@ -46,6 +47,7 @@ transactionRouter.delete(
   "/users/:userId/transactions",
   verifyTokenMiddleware,
   isAdmin,
+  validationMiddleware(bulkTransactionsDeleteSchema),
   asyncHandler(bulkTransactionsDelete)
 );
 
