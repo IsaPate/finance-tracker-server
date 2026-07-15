@@ -8,6 +8,9 @@ export const transactionSchema = z.object({
     .multipleOf(0.01, "Max 2 decimal places"),
   type: z.enum(["INCOME", "EXPENSE"]),
   createdAt: z.string().datetime(),
-  userId: z.number(),
   category: z.string().min(1).max(100).optional(),
+});
+
+export const bulkTransactionSchema = z.object({
+  transactions: z.array(transactionSchema),
 });
