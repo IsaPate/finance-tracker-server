@@ -9,30 +9,13 @@ import { transactionRouter } from "./routes/transaction_routes";
 import { categoryRouter } from "./routes/category_routes";
 import { authRouter } from "./routes/auth_routes";
 import { adminRouter } from "./routes/admin_routes";
-import pino from "pino";
-import pinoHttp from "pino-http";
+import { logger } from "./lib/logger";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
-const logger = pino();
-const httpLogger = pinoHttp({
-  redact: {
-    paths: [
-      "req.headers.authorization",
-      "req.headers.cookie",
-      'res.headers["set-cookie"]',
-    ],
-    censor: "**REDACTED**",
-  },
-  transport:
-    process.env.NODE_ENV !== "production"
-      ? { target: "pino-pretty" }
-      : undefined,
-});
 
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
-app.use(httpLogger);
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
