@@ -3,7 +3,7 @@ import { createUser, getUserByEmail } from "../models/user.server";
 import bcrypt from "bcryptjs";
 import { generateToken, generateRefreshToken } from "../lib/jwt";
 import { createRefreshTokenDB } from "../models/refteshToken.server";
-
+import { logger } from "../lib/logger";
 export async function registerUser(
   req: Request,
   res: Response,
@@ -17,6 +17,7 @@ export async function registerUser(
   }
   const hashed = await bcrypt.hash(password, 10);
   const newUser = await createUser(name, hashed, email);
+  logger.info({ email: newUser.email }, "user registered");
   return res.status(201).json({
     message: "User created successfully",
     user: {
@@ -61,6 +62,7 @@ export async function loginUser(
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
+  logger.info(`ID ${user.id} logged in.`);
   return res.status(200).json({
     message: "Login successful",
     token,

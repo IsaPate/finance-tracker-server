@@ -6,6 +6,7 @@ import {
   getAllUsers,
   getUserById,
 } from "../models/user.server";
+import { logger } from "../lib/logger";
 
 export async function getUserHandler(
   req: Request,
@@ -72,7 +73,7 @@ export async function deleteUserByIdHandler(
   const userId = req.params.userId;
 
   const deleted = await deleteUserById(Number(userId));
-
+  logger.info(`ID ${deleted.id} deleted.`);
   return res.status(200).json({
     message: "User deleted successfully.",
     success: true,
@@ -85,7 +86,8 @@ export async function deleteUserByEmailHandler(
   next: NextFunction
 ) {
   const { email } = req.body;
-  await deleteUserByEmail(email);
+  const deleted = await deleteUserByEmail(email);
+  logger.info(`ID ${deleted.id} deleted.`);
   return res.status(200).json({
     message: "User deleted successfully.",
     success: true,

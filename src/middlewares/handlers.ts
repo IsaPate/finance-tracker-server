@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import { logger } from "../lib/logger";
 
 export const asyncHandler =
   (fn: Function) => async (req: Request, res: Response, next: NextFunction) => {
     try {
       await fn(req, res, next);
     } catch (error) {
+      logger.warn(error);
       next(error);
     }
   };
@@ -15,7 +17,7 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error(err);
+  logger.error(err);
   const statusCode = err.statusCode || 500;
 
   res.status(statusCode).json({
