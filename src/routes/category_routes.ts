@@ -26,6 +26,7 @@ categoryRouter.put(
   "/users/:userId/categories/:categoryId",
   verifyTokenMiddleware,
   isSelfUser,
+  validationMiddleware(categorySchema),
   asyncHandler(editCategoryHandler)
 );
 
