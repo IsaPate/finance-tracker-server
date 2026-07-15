@@ -7,7 +7,6 @@ export function normalizeStatistics(transaction: {
 }
 
 export function round2(x: number) {
-  console.log(x);
   return Math.round(x * 100) / 100;
 }
 
