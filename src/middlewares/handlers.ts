@@ -6,7 +6,6 @@ export const asyncHandler =
     try {
       await fn(req, res, next);
     } catch (error) {
-      logger.warn(error);
       next(error);
     }
   };
