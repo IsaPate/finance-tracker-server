@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
+    "docker-start": "npm run migrate && npm run start",
     "build": "tsc -p .",
     "dev": "nodemon src/index.ts",
     "exec": "ts-node ./src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
