@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 import express, { Application, NextFunction, Request, Response } from "express";
+import cors from "cors";
 import { errorMiddleware } from "./middlewares/handlers";
 import { userRouter } from "./routes/user_routes";
 import { transactionRouter } from "./routes/transaction_routes";
@@ -21,6 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(globalLimiter);
 app.use("/auth", authRouter);
