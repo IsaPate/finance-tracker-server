@@ -5,15 +5,18 @@ import { asyncHandler } from "../middlewares/handlers";
 import { refreshTokenHandler, logoutHandler } from "../middlewares/auth";
 import { validationMiddleware } from "../middlewares/validate";
 import { loginSchema, registrationSchema } from "../schemas/auth.schema";
+import { authLimiter } from "../lib/rate-limit";
 
 const authRouter = Router();
 authRouter.post(
   "/register",
+  authLimiter,
   validationMiddleware(registrationSchema),
   asyncHandler(registerUser)
 );
 authRouter.post(
   "/login",
+  authLimiter,
   validationMiddleware(loginSchema),
   asyncHandler(loginUser)
 );
