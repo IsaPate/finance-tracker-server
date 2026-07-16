@@ -38,12 +38,18 @@ export async function loginUser(
   const user = await getUserByEmail(email);
 
   if (!user) {
-    throw new Error("Invalid email or password");
+    return res.status(401).json({
+      message: "Invalid email or password",
+      success: false,
+    });
   }
 
   const compare = await bcrypt.compare(password, user.password);
   if (!compare) {
-    throw new Error("Invalid password");
+    return res.status(401).json({
+      message: "Invalid password",
+      success: false,
+    });
   }
 
   const token = generateToken(user);
