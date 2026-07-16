@@ -50,32 +50,7 @@ export async function createTransactionHandler(
     throw new Error("User not found.");
   }
   const { title, amount, createdAt, type, category } = req.body;
-  if (!title || typeof title !== "string") {
-    return res.status(400).json({
-      message: "Title has wrong type is missing.",
-      success: false,
-    });
-  }
-  if (typeof amount !== "number") {
-    return res.status(400).json({
-      message: "Amount has wrong type or is missing.",
-      success: false,
-    });
-  }
-
   const date = new Date(createdAt.split("T")[0]);
-  if (isNaN(date.getTime())) {
-    return res.status(400).json({
-      message: "Date is missing.",
-      success: false,
-    });
-  }
-  if (!type) {
-    return res.status(400).json({
-      message: "Transaction type is missing.",
-      success: false,
-    });
-  }
   const cat = await getCategoryByTitle(category, Number(userId));
   let categoryId = cat?.id;
   if (!categoryId) {
