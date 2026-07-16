@@ -42,9 +42,10 @@
     "forceConsistentCasingInFileNames": true , 
     
   } , 
-  "exclude": [ 
+  "exclude": [
     "node_modules",
     "prisma.config.ts",
-    "prisma"
+    "prisma",
+    "tests"
   ]
 }
