@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
-app.use(helmet);
+app.use(helmet());
 app.use(globalLimiter);
 app.use("/auth", authRouter);
 app.use(userRouter);
