@@ -11,6 +11,7 @@ import { authRouter } from "./routes/auth_routes";
 import { adminRouter } from "./routes/admin_routes";
 import { logger } from "./lib/logger";
 import { globalLimiter } from "./lib/rate-limit";
+import helmet from "helmet";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet);
 app.use(globalLimiter);
 app.use("/auth", authRouter);
 app.use(userRouter);
