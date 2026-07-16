@@ -10,7 +10,7 @@ import {
   getTransactionsByUserId,
   updateTransaction,
 } from "../models/transaction.server";
-import { getCategoryByTitle } from "../models/category.server";
+import { createCategory, getCategoryByTitle } from "../models/category.server";
 import { Transaction } from "@prisma/client";
 export async function getUserTransactionHandler(
   req: Request,
@@ -76,17 +76,11 @@ export async function createTransactionHandler(
       success: false,
     });
   }
-
-  let categoryId = undefined;
-  if (category) {
-    const cat = await getCategoryByTitle(category, Number(userId));
-    if (!cat) {
-      return res.status(400).json({
-        message: "Category does not exist.",
-        success: false,
-      });
-    }
-    categoryId = Number(cat.id);
+  const cat = await getCategoryByTitle(category, Number(userId));
+  let categoryId = cat?.id;
+  if (!categoryId) {
+    const newCategory = await createCategory(category, Number(userId));
+    categoryId = newCategory.id;
   }
   const transaction = await createTransaction(
     Number(user.id),
