@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://isaakpaterakes:%21Postgres1%40@db:5432/finance_tracker
+      NODE_ENV: production
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: isaakpaterakes
+      POSTGRES_PASSWORD: "!Postgres1@"
+      POSTGRES_DB: finance_tracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
