@@ -19,7 +19,9 @@ export const bulkTransactionsDeleteSchema = z.object({
   transactionIds: z.array(z.number()).min(1, "At least one id required"),
 });
 
-export const editTransactionSchema = z.object({
-  title: z.string().min(1).max(100).optional(),
-  amount: z.number().positive().multipleOf(0.01).optional(),
-});
+export const editTransactionSchema = transactionSchema
+  .pick({
+    title: true,
+    amount: true,
+  })
+  .partial();
