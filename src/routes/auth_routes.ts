@@ -34,11 +34,13 @@ authRouter.post("/refresh", asyncHandler(refreshTokenHandler));
 authRouter.post("/logout", asyncHandler(logoutHandler));
 authRouter.post(
   "/forgot-password",
+  authLimiter,
   validationMiddleware(forgotPasswordSchema),
   asyncHandler(forgotPasswordHandler)
 );
 authRouter.post(
   "/reset-password",
+  authLimiter,
   validationMiddleware(resetPasswordSchema),
   asyncHandler(resetPasswordHandler)
 );
