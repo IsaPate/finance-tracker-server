@@ -194,9 +194,7 @@ export async function resetPasswordHandler(
   const hashed = await bcrypt.hash(newPassword, 10);
 
   await updateUserPasswordByEmail(user.email, hashed);
-
   await deleteResetTokenByUserId(Number(userId));
-
   await deleteAllRefreshTokenDB(Number(userId));
 
   return res.status(200).json({
