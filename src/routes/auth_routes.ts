@@ -9,7 +9,12 @@ import {
 import { asyncHandler } from "../middlewares/handlers";
 import { refreshTokenHandler, logoutHandler } from "../middlewares/auth";
 import { validationMiddleware } from "../middlewares/validate";
-import { loginSchema, registrationSchema } from "../schemas/auth.schema";
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  registrationSchema,
+  resetPasswordSchema,
+} from "../schemas/auth.schema";
 import { authLimiter } from "../lib/rate-limit";
 
 const authRouter = Router();
@@ -27,6 +32,14 @@ authRouter.post(
 );
 authRouter.post("/refresh", asyncHandler(refreshTokenHandler));
 authRouter.post("/logout", asyncHandler(logoutHandler));
-authRouter.post("/forgot-password", asyncHandler(forgotPasswordHandler));
-authRouter.post("/reset-password", asyncHandler(resetPasswordHandler));
+authRouter.post(
+  "/forgot-password",
+  validationMiddleware(forgotPasswordSchema),
+  asyncHandler(forgotPasswordHandler)
+);
+authRouter.post(
+  "/reset-password",
+  validationMiddleware(resetPasswordSchema),
+  asyncHandler(resetPasswordHandler)
+);
 export { authRouter };

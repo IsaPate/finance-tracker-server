@@ -14,3 +14,12 @@ export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
+
+export const forgotPasswordSchema = loginSchema.pick({
+  email: true,
+});
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(8),
+  newPassword: z.string().min(8),
+});
