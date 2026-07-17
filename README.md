@@ -13,13 +13,14 @@ Express + TypeScript REST API for personal finance management (income/expenses, 
 - **helmet** — security headers
 - **cors** — cross-origin requests (React frontend)
 - **express-rate-limit** — rate limiting
+- **nodemailer** — sending password reset emails
 - **Jest** + **Supertest** — tests
 
 ## Setup
 
 ### With Docker (recommended)
 
-1. Create a `.env` file in the root (see `.env.example`).
+1. Create a `.env` file in the root (see `.env.example`). For local development, [Mailtrap](https://mailtrap.io) sandbox SMTP credentials work well for the `NODE_MAILER_*` values without sending real emails.
 2. `docker compose up --build` — builds the app + Postgres, runs migrations automatically, starts the server at `http://localhost:3000`.
 
 ### Without Docker
