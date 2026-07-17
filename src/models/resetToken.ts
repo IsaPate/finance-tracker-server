@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma_client";
 
-export const deleteRefreshTokenByUserId = async (userId: number) => {
+export const deleteResetTokenByUserId = async (userId: number) => {
   return prisma.resetToken.delete({
     where: {
       userId,
