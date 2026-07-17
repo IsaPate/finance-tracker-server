@@ -33,3 +33,11 @@ export const deleteRefreshTokenDB = async (token: string) => {
     },
   });
 };
+
+export const deleteAllRefreshTokenDB = async (userId: number) => {
+  return await prisma.refreshToken.deleteMany({
+    where: {
+      userId,
+    },
+  });
+};
