@@ -1,15 +1,27 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, getUserByEmail } from "../models/user.server";
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  updateUser,
+  updateUserPasswordByEmail,
+} from "../models/user.server";
 import bcrypt from "bcryptjs";
 import { generateToken, generateRefreshToken } from "../lib/jwt";
-import { createRefreshTokenDB } from "../models/refteshToken.server";
+import {
+  createRefreshTokenDB,
+  deleteAllRefreshTokenDB,
+  findRefreshTokenDB,
+} from "../models/refteshToken.server";
 import { logger } from "../lib/logger";
 import crypto from "crypto";
 import {
   createResetToken,
   deleteResetTokenByUserId,
+  getResetTokenByUserId,
 } from "../models/resetToken";
 import config from "../lib/env.export";
+import { match } from "assert";
 
 export async function registerUser(
   req: Request,
@@ -107,10 +119,10 @@ export async function forgotPasswordHandler(
   const created = await createResetToken(
     hashed,
     user.id,
-    new Date(30 * 60 * 1000)
+    new Date(Date.now() + 30 * 60 * 1000)
   );
   return res.status(200).json({
-    resetUrl: `${config.clientUrl}/auth/reset-password?t=${created.token}&id=${created.userId}`,
+    resetUrl: `${config.clientUrl}/auth/reset-password?t=${resetToken}&id=${created.userId}`,
     success: true,
   });
 }
@@ -119,4 +131,76 @@ export async function resetPasswordHandler(
   req: Request,
   res: Response,
   next: NextFunction
-) {}
+) {
+  //requires validation
+
+  const { password, newPassword } = req.body;
+  const token = req.query.t;
+  const userId = req.query.id;
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+  if (!userId) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+  const user = await getUserById(Number(userId));
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found.",
+      success: false,
+    });
+  }
+
+  const retrieved = await getResetTokenByUserId(Number(userId));
+  if (!retrieved) {
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired token.", success: false });
+  }
+  const matched = await bcrypt.compare(String(token), retrieved.token);
+
+  if (!matched) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+
+  if (retrieved.expiresAt < new Date()) {
+    return res
+      .status(401)
+      .json({ message: "Token has expired.", success: false });
+  }
+  if (password !== newPassword) {
+    return res
+      .status(400)
+      .json({ message: "Passwords do not match.", success: false });
+  }
+  const same = await bcrypt.compare(newPassword, user.password);
+  if (same) {
+    return res.status(400).json({
+      message: "You need to type a diffenrent password than the previous one.",
+      success: false,
+    });
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+
+  await updateUserPasswordByEmail(user.email, hashed);
+
+  await deleteResetTokenByUserId(Number(userId));
+
+  await deleteAllRefreshTokenDB(Number(userId));
+
+  return res.status(200).json({
+    message: "Successfully reseted password.",
+    success: true,
+  });
+}
