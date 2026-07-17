@@ -4,6 +4,13 @@ import bcrypt from "bcryptjs";
 import { generateToken, generateRefreshToken } from "../lib/jwt";
 import { createRefreshTokenDB } from "../models/refteshToken.server";
 import { logger } from "../lib/logger";
+import crypto from "crypto";
+import {
+  createResetToken,
+  deleteResetTokenByUserId,
+} from "../models/resetToken";
+import config from "../lib/env.export";
+
 export async function registerUser(
   req: Request,
   res: Response,
@@ -74,4 +81,34 @@ export async function loginUser(
     token,
     success: true,
   });
+}
+
+export async function forgotPasswordHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email } = req.body;
+
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "No user found.",
+      success: false,
+    });
+  }
+  const token = user.resetToken;
+
+  if (token) await deleteResetTokenByUserId(user.id);
+
+  let resetToken = crypto.randomBytes(32).toString("hex");
+  const bcryptSalt = 10;
+  const hashed = await bcrypt.hash(resetToken, Number(bcryptSalt));
+  const created = await createResetToken(
+    hashed,
+    user.id,
+    new Date(30 * 60 * 1000)
+  );
+  return `${config.clientUrl}/auth/reset-password?t=${created.token}&id=${created.userId}`;
 }
