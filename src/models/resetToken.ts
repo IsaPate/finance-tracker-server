@@ -21,3 +21,11 @@ export const createResetToken = async (
     },
   });
 };
+
+export const getResetTokenByUserId = async (userId: number) => {
+  return await prisma.resetToken.findUnique({
+    where: {
+      userId,
+    },
+  });
+};
