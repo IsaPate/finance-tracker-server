@@ -29,7 +29,6 @@ export async function registerUser(
   next: NextFunction
 ) {
   const { name, password, email } = req.body;
-  //validation username and password
   const user = await getUserByEmail(email);
   if (user) {
     throw new Error("Email already exists");
@@ -103,12 +102,16 @@ export async function forgotPasswordHandler(
   const { email } = req.body;
 
   const user = await getUserByEmail(email);
+  const genericResponse = {
+    message:
+      "If an account with that email exists, a reset link has been sent.",
+    success: true,
+  };
+
   if (!user) {
-    return res.status(404).json({
-      message: "No user found.",
-      success: false,
-    });
+    return res.status(200).json(genericResponse);
   }
+
   const token = user.resetToken;
 
   if (token) await deleteResetTokenByUserId(user.id);
@@ -121,10 +124,10 @@ export async function forgotPasswordHandler(
     user.id,
     new Date(Date.now() + 30 * 60 * 1000)
   );
-  return res.status(200).json({
-    resetUrl: `${config.clientUrl}/auth/reset-password?t=${resetToken}&id=${created.userId}`,
-    success: true,
-  });
+  const resetUrl = `${config.clientUrl}/auth/reset-password?t=${resetToken}&id=${created.userId}`;
+  logger.info({ resetUrl }, "password reset requested");
+
+  return res.status(200).json(genericResponse);
 }
 
 export async function resetPasswordHandler(
@@ -132,8 +135,6 @@ export async function resetPasswordHandler(
   res: Response,
   next: NextFunction
 ) {
-  //requires validation
-
   const { password, newPassword } = req.body;
   const token = req.query.t;
   const userId = req.query.id;
