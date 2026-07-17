@@ -63,6 +63,9 @@ export const getUserByEmail = async (email: string) => {
     where: {
       email,
     },
+    include: {
+      resetToken: true,
+    },
   });
 };
 
