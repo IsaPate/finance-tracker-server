@@ -1,6 +1,10 @@
 import { Router } from "express";
 
-import { loginUser, registerUser } from "../controllers/auth_controller";
+import {
+  forgotPasswordHandler,
+  loginUser,
+  registerUser,
+} from "../controllers/auth_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { refreshTokenHandler, logoutHandler } from "../middlewares/auth";
 import { validationMiddleware } from "../middlewares/validate";
@@ -22,4 +26,5 @@ authRouter.post(
 );
 authRouter.post("/refresh", asyncHandler(refreshTokenHandler));
 authRouter.post("/logout", asyncHandler(logoutHandler));
+authRouter.post("/forgot-password", asyncHandler(forgotPasswordHandler));
 export { authRouter };
