@@ -51,6 +51,20 @@ export const updateUser = async (userId: number, name: string) => {
   });
 };
 
+export const updateUserPasswordByEmail = async (
+  email: string,
+  password: string
+) => {
+  return await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      password,
+    },
+  });
+};
+
 export const getUserByName = async (name: string) => {
   return await prisma.user.findFirst({
     where: {
