@@ -7,3 +7,17 @@ export const deleteRefreshTokenByUserId = async (userId: number) => {
     },
   });
 };
+
+export const createResetToken = async (
+  token: string,
+  userId: number,
+  expiresAt: Date
+) => {
+  return prisma.resetToken.create({
+    data: {
+      token,
+      userId,
+      expiresAt,
+    },
+  });
+};
