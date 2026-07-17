@@ -4,6 +4,7 @@ import {
   forgotPasswordHandler,
   loginUser,
   registerUser,
+  resetPasswordHandler,
 } from "../controllers/auth_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { refreshTokenHandler, logoutHandler } from "../middlewares/auth";
@@ -27,4 +28,5 @@ authRouter.post(
 authRouter.post("/refresh", asyncHandler(refreshTokenHandler));
 authRouter.post("/logout", asyncHandler(logoutHandler));
 authRouter.post("/forgot-password", asyncHandler(forgotPasswordHandler));
+authRouter.post("/reset-password", asyncHandler(resetPasswordHandler));
 export { authRouter };

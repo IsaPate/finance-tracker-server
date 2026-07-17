@@ -91,7 +91,6 @@ export async function forgotPasswordHandler(
   const { email } = req.body;
 
   const user = await getUserByEmail(email);
-
   if (!user) {
     return res.status(404).json({
       message: "No user found.",
@@ -110,5 +109,14 @@ export async function forgotPasswordHandler(
     user.id,
     new Date(30 * 60 * 1000)
   );
-  return `${config.clientUrl}/auth/reset-password?t=${created.token}&id=${created.userId}`;
+  return res.status(200).json({
+    resetUrl: `${config.clientUrl}/auth/reset-password?t=${created.token}&id=${created.userId}`,
+    success: true,
+  });
 }
+
+export async function resetPasswordHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
