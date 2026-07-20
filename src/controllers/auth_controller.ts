@@ -3,7 +3,6 @@ import {
   createUser,
   getUserByEmail,
   getUserById,
-  updateUser,
   updateUserPasswordByEmail,
 } from "../models/user.server";
 import bcrypt from "bcryptjs";
@@ -11,7 +10,6 @@ import { generateToken, generateRefreshToken } from "../lib/jwt";
 import {
   createRefreshTokenDB,
   deleteAllRefreshTokenDB,
-  findRefreshTokenDB,
 } from "../models/refteshToken.server";
 import { logger } from "../lib/logger";
 import crypto from "crypto";
