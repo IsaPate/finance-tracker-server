@@ -3,6 +3,9 @@ dotenv.config();
 
 const config = {
   clientUrl: process.env.CLIENT_URL,
+  secret: process.env.SECRET,
+  refreshKey: process.env.REFRESH_SECRET_KEY,
+  databaseUrl: process.env.DATABASE_URL,
   nodemailer: {
     host: process.env.NODE_MAILER_HOST,
     username: process.env.NODE_MAILER_USERNAME,
