@@ -21,7 +21,7 @@ import {
   getResetTokenByUserId,
 } from "../models/resetToken";
 import config from "../lib/env.export";
-import { match } from "assert";
+import { resetPasswordEmail } from "../lib/mailer";
 
 export async function registerUser(
   req: Request,
@@ -126,7 +126,7 @@ export async function forgotPasswordHandler(
   );
   const resetUrl = `${config.clientUrl}/auth/reset-password?t=${resetToken}&id=${created.userId}`;
   logger.info({ resetUrl }, "password reset requested");
-
+  await resetPasswordEmail(resetUrl, user.email);
   return res.status(200).json(genericResponse);
 }
 
