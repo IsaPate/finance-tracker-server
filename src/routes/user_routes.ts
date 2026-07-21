@@ -17,7 +17,7 @@ const userRouter = Router();
 userRouter.get(
   "/users/:userId",
   verifyTokenMiddleware,
-  isAdmin,
+  isSelfUser,
   asyncHandler(getUserHandler)
 );
 
