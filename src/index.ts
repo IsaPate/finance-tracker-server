@@ -6,7 +6,7 @@ import { emailReporting } from "./email-reporting/email-reporting";
 
 const port = process.env.PORT || 3000;
 
-const pQueue = new PQueue({});
+const pQueue = new PQueue({ concurrency: 2 });
 
 async function scanForEmailReporting() {
   const now = new Date();
