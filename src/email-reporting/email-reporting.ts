@@ -1,6 +1,4 @@
-import { normalizeStatistics } from "../controllers/helper";
 import { EmailReportingService } from "../lib/mailer";
-import { getTransactionSumByTypeAndEmail } from "../models/transaction.server";
 import { groupedTransactionsByTypeAndCategoryId } from "../models/transaction.server";
 
 export async function emailReporting(email: string, monthRange: Date) {
