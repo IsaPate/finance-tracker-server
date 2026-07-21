@@ -1,9 +1,17 @@
 import { EmailReportingService } from "../lib/mailer";
 import { groupedTransactionsByTypeAndCategoryId } from "../models/transaction.server";
 
-export async function emailReporting(email: string, monthRange: Date) {
+export async function emailReporting(
+  email: string,
+  monthRange: {
+    start: Date;
+    end: Date;
+  }
+) {
   const groupedTransactions = await groupedTransactionsByTypeAndCategoryId(
-    email
+    email,
+    monthRange.start,
+    monthRange.end
   );
 
   const totalIncome = groupedTransactions
