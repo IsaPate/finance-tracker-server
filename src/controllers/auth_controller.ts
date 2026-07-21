@@ -19,7 +19,7 @@ import {
   getResetTokenByUserId,
 } from "../models/resetToken";
 import config from "../lib/env.export";
-import { resetPasswordEmail, ResetPasswordEmailService } from "../lib/mailer";
+import { ResetPasswordEmailService } from "../lib/mailer";
 
 export async function registerUser(
   req: Request,
