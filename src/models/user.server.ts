@@ -124,3 +124,14 @@ export const getUsersWithEnabledReporting = async () => {
     },
   });
 };
+
+export const toogleEmailReporting = async (userId: number, toogle: boolean) => {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      enabledReporting: toogle,
+    },
+  });
+};

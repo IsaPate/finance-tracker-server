@@ -5,6 +5,7 @@ import {
   deleteUserById,
   getAllUsers,
   getUserById,
+  toogleEmailReporting,
 } from "../models/user.server";
 import { logger } from "../lib/logger";
 
@@ -90,6 +91,21 @@ export async function deleteUserByEmailHandler(
   logger.info(`ID ${deleted.id} deleted.`);
   return res.status(200).json({
     message: "User deleted successfully.",
+    success: true,
+  });
+}
+
+export async function userSettingsHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { toogle } = req.body;
+  const { userId } = req.params;
+  const toggled = await toogleEmailReporting(Number(userId), toogle);
+  const toogledText = toogle === true ? "enabled" : "disabled";
+  return res.status(200).json({
+    message: `User ${toogledText} monthly email reporting successfully.`,
     success: true,
   });
 }

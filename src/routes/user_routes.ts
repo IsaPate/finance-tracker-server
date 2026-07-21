@@ -3,9 +3,14 @@ import {
   createUserHandler,
   getUserHandler,
   getAllUserHandler,
+  userSettingsHandler,
 } from "../controllers/user_controller";
 import { asyncHandler } from "../middlewares/handlers";
-import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
+import {
+  isAdmin,
+  isSelfUser,
+  verifyTokenMiddleware,
+} from "../middlewares/auth";
 
 const userRouter = Router();
 
@@ -14,6 +19,13 @@ userRouter.get(
   verifyTokenMiddleware,
   isAdmin,
   asyncHandler(getUserHandler)
+);
+
+userRouter.patch(
+  "/users/:userId/settings",
+  verifyTokenMiddleware,
+  isSelfUser,
+  asyncHandler(userSettingsHandler)
 );
 
 export { userRouter };
