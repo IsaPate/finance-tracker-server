@@ -16,10 +16,8 @@ abstract class EmailService {
       },
     });
   }
-  abstract getHtml(context: string): string;
-  abstract emailSender(
-    context: Record<string, string>
-  ): Promise<SMTPTransport.SentMessageInfo>;
+  abstract getHtml(): string;
+  abstract emailSender(): Promise<SMTPTransport.SentMessageInfo>;
 }
 
 export class EmailReportingService extends EmailService {
@@ -48,21 +46,7 @@ export class EmailReportingService extends EmailService {
     this.totalIncome = totalIncome;
     this.totalExpense = totalExpense;
   }
-  getStatistics() {
-    const text = `User ${this.email} has totals 
-      Income : ${this.totalIncome} , 
-      Expense : ${this.totalExpense} , 
-      For Every Category Spended :
-      ${this.sumAmountByCategory
-        .map(
-          (g) =>
-            `Category : ${g.categoryId} ,Amount: ${g.amount} , Type : ${g.type}\n`
-        )
-        .join("")}
-    `;
-    return text;
-  }
-  getHtml(context: string): string {
+  getHtml(): string {
     const netBalance = round2(this.totalIncome - this.totalExpense);
     const rows = this.sumAmountByCategory
       .map(
@@ -109,7 +93,7 @@ export class EmailReportingService extends EmailService {
     </div>`;
   }
   async emailSender(): Promise<SMTPTransport.SentMessageInfo> {
-    const html = this.getHtml("");
+    const html = this.getHtml();
     // return;
     try {
       const info = await this.transporter.sendMail({
@@ -121,8 +105,6 @@ export class EmailReportingService extends EmailService {
       logger.info("Message sent: %s", info.messageId);
 
       return info;
-      // Preview URL is only available when using an Ethereal test account
-      // logger.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     } catch (err) {
       logger.error("Error while sending mail");
       logger.error(JSON.stringify(err));
@@ -140,26 +122,26 @@ export class ResetPasswordEmailService extends EmailService {
     this.resetUrl = url;
     this.email = email;
   }
-  getHtml(context: string): string {
+  getHtml(): string {
     return `
     <div style="font-family: Arial, Helvetica, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1f2937;">
       <h2 style="margin: 0 0 16px; font-size: 20px; color: #111827;">Finance Tracker</h2>
       <p style="font-size: 15px; line-height: 1.5; margin: 0 0 24px;">
         We received a request to reset your password. Click the button below to choose a new one — this link expires in 30 minutes.
       </p>
-      <a href="${context}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 15px; font-weight: bold;">
+      <a href="${this.resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 15px; font-weight: bold;">
         Reset Password
       </a>
       <p style="font-size: 13px; line-height: 1.5; color: #6b7280; margin: 24px 0 0;">
         If you didn't request this, you can safely ignore this email — your password won't change.
       </p>
       <p style="font-size: 12px; color: #9ca3af; margin: 16px 0 0; word-break: break-all;">
-        Or copy this link into your browser: ${context}
+        Or copy this link into your browser: ${this.resetUrl}
       </p>
     </div>`;
   }
   async emailSender(): Promise<SMTPTransport.SentMessageInfo> {
-    const html = this.getHtml(this.resetUrl);
+    const html = this.getHtml();
     try {
       const info = await this.transporter.sendMail({
         from: "Finance Tracker <ftrack@mail.com>",
@@ -170,8 +152,6 @@ export class ResetPasswordEmailService extends EmailService {
       logger.info("Message sent: %s", info.messageId);
 
       return info;
-      // Preview URL is only available when using an Ethereal test account
-      // logger.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     } catch (err) {
       logger.error("Error while sending mail");
       logger.error(JSON.stringify(err));
