@@ -1,9 +1,5 @@
 import { $Enums, User } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
-import {
-  getTransactionsCount,
-  getTransactionSumByType,
-} from "./transaction.server";
 export const createUser = async (
   name: string,
   password: string,
