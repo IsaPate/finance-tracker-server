@@ -21,6 +21,7 @@ model User {
   categories Category []
   refreshToken RefreshToken []
   resetToken ResetToken? 
+  enabledReporting Boolean @default(false)
 }
 
 enum UserRoleType {
