@@ -182,3 +182,18 @@ export const getTransactionsCount = async (role: $Enums.UserRoleType) => {
     },
   });
 };
+
+export const groupedTransactionsByTypeAndCategoryId = async (email: string) => {
+  return await prisma.transaction.groupBy({
+    by: ["categoryId", "type"],
+    _sum: {
+      amount: true,
+    },
+    where: {
+      user: {
+        email,
+        role: "USER",
+      },
+    },
+  });
+};
