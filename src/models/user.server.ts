@@ -116,3 +116,11 @@ export const getUsersByRole = async (role: $Enums.UserRoleType) => {
     },
   });
 };
+
+export const getUsersWithEnabledReporting = async () => {
+  return prisma.user.findMany({
+    where: {
+      enabledReporting: true,
+    },
+  });
+};
