@@ -13,7 +13,9 @@ Express + TypeScript REST API for personal finance management (income/expenses, 
 - **helmet** — security headers
 - **cors** — cross-origin requests (React frontend)
 - **express-rate-limit** — rate limiting
-- **nodemailer** — sending password reset emails
+- **nodemailer** — sending password reset and monthly report emails
+- **node-cron** — scheduling the monthly email report job
+- **p-queue** — controlled-concurrency sending of report emails
 - **Jest** + **Supertest** — tests
 
 ## Setup
