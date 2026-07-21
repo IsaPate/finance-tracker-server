@@ -29,7 +29,7 @@ export async function emailReporting(email: string, monthRange: Date) {
       }
       return acc;
     }, 0);
-  const emailReportingService = new EmailReportingService(
+  const monthlyEmailReporting = new EmailReportingService(
     email,
     groupedTransactions.map((g) => {
       return {
@@ -40,5 +40,5 @@ export async function emailReporting(email: string, monthRange: Date) {
     totalIncome,
     totalExpense
   );
-  await emailReportingService.emailSender();
+  await monthlyEmailReporting.emailSender();
 }
