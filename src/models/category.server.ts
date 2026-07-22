@@ -30,10 +30,15 @@ export const getCategoryById = async (categoryId: number, userId: number) => {
   });
 };
 
-export const updateCategory = async (categoryId: number, newTitle: string) => {
+export const updateCategory = async (
+  categoryId: number,
+  newTitle: string,
+  userId: number
+) => {
   return await prisma.category.update({
     where: {
       id: categoryId,
+      userId,
     },
     data: {
       title: newTitle,

@@ -62,9 +62,11 @@ export async function editCategoryHandler(
   next: NextFunction
 ) {
   const { categoryId } = req.params;
+  const { userId } = req.params;
+
   const { title } = req.body;
 
-  await updateCategory(Number(categoryId), title);
+  await updateCategory(Number(categoryId), title, Number(userId));
   return res.status(200).json({
     message: "Category edited.",
     success: true,
