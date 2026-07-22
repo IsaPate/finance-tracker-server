@@ -84,9 +84,6 @@ export async function getUserCategoriesHandler(
 
   const categories = await getUserCategories(Number(userId));
 
-  if (!categories) {
-    throw new Error("No categories found for this user.");
-  }
   return res.status(200).json({
     message: "Categories found.",
     data: categories,
@@ -106,10 +103,6 @@ export async function getTransactionsByUserIdAndCategoryIdHandler(
     Number(categoryId),
     Number(userId)
   );
-
-  if (!transactions) {
-    throw new Error("No transactions found for this category.");
-  }
 
   return res.status(200).json({
     message: "Transactions found.",
