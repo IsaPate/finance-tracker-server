@@ -4,16 +4,17 @@ import {
   deleteCategory,
   getCategoriesByUser,
   getCategoryById,
-  getCategoryByTitle,
   getUserCategories,
   updateCategory,
 } from "../models/category.server";
 import { getTransactionsByCategoryId } from "../models/transaction.server";
+import { ControllerResponse } from "./types";
+import { Category, Transaction } from "@prisma/client";
 
 // REQUESTS FOR SINGLE CATEGORY
 export async function createCategoryHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { title } = req.body;
@@ -28,7 +29,7 @@ export async function createCategoryHandler(
 }
 export async function getCategoryHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Category | null>>,
   next: NextFunction
 ) {
   const { categoryId } = req.params;
@@ -44,7 +45,7 @@ export async function getCategoryHandler(
 
 export async function deleteCategoryHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { userId, categoryId } = req.params;
@@ -58,7 +59,7 @@ export async function deleteCategoryHandler(
 
 export async function editCategoryHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Category>>,
   next: NextFunction
 ) {
   const { categoryId } = req.params;
@@ -77,7 +78,7 @@ export async function editCategoryHandler(
 
 export async function getUserCategoriesHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Category[] | null>>,
   next: NextFunction
 ) {
   const { userId } = req.params;
@@ -93,7 +94,7 @@ export async function getUserCategoriesHandler(
 
 export async function getTransactionsByUserIdAndCategoryIdHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Transaction[]>>,
   next: NextFunction
 ) {
   const { userId } = req.params;
@@ -113,16 +114,24 @@ export async function getTransactionsByUserIdAndCategoryIdHandler(
 
 export async function adminGetAllCategories(
   req: Request,
-  res: Response,
+  res: Response<
+    ControllerResponse<{
+      page: number;
+      limit: number;
+      hasNext: boolean;
+      cursor: number | null;
+      pageData: Awaited<ReturnType<typeof getCategoriesByUser>>;
+    }>
+  >,
   next: NextFunction
 ) {
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 10;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
   const cursor = req.query.cursor;
 
   const categories = await getCategoriesByUser(
-    Number(page),
-    Number(limit),
+    page,
+    limit,
     cursor ? Number(cursor) : null
   );
   let hasNext = Number(limit) < categories.length;
