@@ -20,7 +20,10 @@ export async function getUserTransactionHandler(
   const userId = Number(req.params.userId);
   const user = await getUserById(Number(userId));
   if (!user) {
-    throw new Error("User not found.");
+    return res.status(404).json({
+      success: false,
+      message: "User not found.",
+    });
   }
   const transactionId = Number(req.params.transactionId);
 
@@ -30,7 +33,10 @@ export async function getUserTransactionHandler(
   );
 
   if (!transaction) {
-    throw new Error("Transaction not found.");
+    return res.status(404).json({
+      success: false,
+      message: "Transaction not found.",
+    });
   }
   return res.status(200).json({
     transaction,
@@ -47,7 +53,10 @@ export async function createTransactionHandler(
 
   const user = await getUserById(Number(userId));
   if (!user) {
-    throw new Error("User not found.");
+    return res.status(404).json({
+      success: false,
+      message: "User not found.",
+    });
   }
   const { title, amount, createdAt, type, category } = req.body;
   const date = new Date(createdAt.split("T")[0]);
@@ -83,7 +92,10 @@ export async function getUserTransactionsHandler(
   const transactions = await getTransactionsByUserId(Number(userId));
 
   if (!transactions) {
-    throw new Error("Transaction not found.");
+    return res.status(404).json({
+      success: false,
+      message: "Transaction not found.",
+    });
   }
 
   return res.status(200).json({
@@ -121,10 +133,13 @@ export async function editUserTransactions(
     amount
   );
   if (updated.count === 0) {
-    throw new Error("Transaction not found.");
+    return res.status(404).json({
+      success: false,
+      message: "Transactions could not processed",
+    });
   }
   return res.status(200).json({
-    message: "Transactions updated",
+    message: "Transaction updated.",
     success: true,
   });
 }

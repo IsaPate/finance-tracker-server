@@ -17,7 +17,10 @@ export async function getUserHandler(
   const userId = req.params.userId;
   const user = await getUserById(Number(userId));
   if (!user) {
-    throw new Error("User not found.");
+    return res.status(404).json({
+      success: false,
+      message: "User not found.",
+    });
   }
   return res.status(200).json({
     id: user.id,
