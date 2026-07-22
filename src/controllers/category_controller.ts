@@ -32,8 +32,9 @@ export async function getCategoryHandler(
   next: NextFunction
 ) {
   const { categoryId } = req.params;
+  const { userId } = req.params;
 
-  const category = await getCategoryById(Number(categoryId));
+  const category = await getCategoryById(Number(categoryId), Number(userId));
   return res.status(200).json({
     message: "Category found.",
     data: category,

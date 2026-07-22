@@ -21,10 +21,11 @@ export const getCategoryByTitle = async (title: string, userId: number) => {
   });
 };
 
-export const getCategoryById = async (categoryId: number) => {
+export const getCategoryById = async (categoryId: number, userId: number) => {
   return await prisma.category.findUnique({
     where: {
       id: categoryId,
+      userId,
     },
   });
 };
