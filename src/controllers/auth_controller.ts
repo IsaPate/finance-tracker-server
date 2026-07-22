@@ -20,10 +20,16 @@ import {
 } from "../models/resetToken";
 import config from "../lib/env.export";
 import { ResetPasswordEmailService } from "../lib/mailer";
+import { ControllerResponse } from "./types";
 
 export async function registerUser(
   req: Request,
-  res: Response,
+  res: Response<
+    ControllerResponse<{
+      name: string;
+      email: string;
+    }>
+  >,
   next: NextFunction
 ) {
   const { name, password, email } = req.body;
@@ -36,7 +42,7 @@ export async function registerUser(
   logger.info({ email: newUser.email }, "user registered");
   return res.status(201).json({
     message: "User created successfully",
-    user: {
+    data: {
       name: newUser.name,
       email: newUser.email,
     },
@@ -46,7 +52,7 @@ export async function registerUser(
 
 export async function loginUser(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<string>>,
   next: NextFunction
 ) {
   const { email, password } = req.body;
@@ -87,14 +93,14 @@ export async function loginUser(
   logger.info(`ID ${user.id} logged in.`);
   return res.status(200).json({
     message: "Login successful",
-    token,
+    data: token,
     success: true,
   });
 }
 
 export async function forgotPasswordHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { email } = req.body;
@@ -134,7 +140,7 @@ export async function forgotPasswordHandler(
 
 export async function resetPasswordHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { password, newPassword } = req.body;
