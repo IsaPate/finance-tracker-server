@@ -5,10 +5,13 @@ import {
   getTransactionSumByType,
 } from "../models/transaction.server";
 import { normalizeResultForStatistics, normalizeStatistics } from "./helper";
+import { ControllerResponse } from "./types";
 
 export async function adminGetTotalStatistics(
   req: Request,
-  res: Response,
+  res: Response<
+    ControllerResponse<ReturnType<typeof normalizeResultForStatistics>>
+  >,
   next: NextFunction
 ) {
   const totalAmountSumIncome = await getTransactionSumByType("INCOME");
