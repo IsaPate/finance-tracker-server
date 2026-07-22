@@ -1,18 +1,16 @@
 import { Router } from "express";
+import { asyncHandler } from "../middlewares/handlers";
+import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
+
+import { deleteCategoryHandler } from "../controllers/category_controller";
 import {
   getAllUserHandler,
   deleteUserByIdHandler,
   deleteUserByEmailHandler,
-} from "../controllers/user_controller";
-import { asyncHandler } from "../middlewares/handlers";
-import { isAdmin, verifyTokenMiddleware } from "../middlewares/auth";
-
-import {
-  deleteCategoryHandler,
+  adminGetAllTransactions,
   adminGetAllCategories,
-} from "../controllers/category_controller";
-import { adminGetAllTransactions } from "../controllers/transaction_controller";
-import { adminGetTotalStatistics } from "../controllers/admin_controller";
+  adminGetTotalStatistics,
+} from "../controllers/admin_controller";
 
 const adminRouter = Router();
 

@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, getUserById } from "../models/user.server";
+import { getUserById } from "../models/user.server";
 
 import {
   createTransaction,
   createTransactions,
   deleteTransactions,
-  getAllTransactions,
   getTransactionByUserIdAndTransactionId,
   getTransactionsByUserId,
   updateTransaction,
@@ -160,37 +159,3 @@ export async function bulkTransactionsCreate(
   });
 }
 
-export async function adminGetAllTransactions(
-  req: Request,
-  res: Response<
-    ControllerResponse<{
-      page: number;
-      limit: number;
-      hasNext: boolean;
-      cursor: number | null;
-      pageData: Awaited<ReturnType<typeof getAllTransactions>>;
-    }>
-  >,
-  next: NextFunction
-) {
-  const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 10;
-  const cursor = req.query.cursor;
-
-  const transactions = await getAllTransactions(
-    page,
-    limit,
-    cursor ? Number(cursor) : null
-  );
-  const hasNext = transactions.length > limit;
-  return res.status(200).json({
-    data: {
-      page,
-      limit,
-      hasNext,
-      cursor: hasNext ? transactions[limit - 1].id : null,
-      pageData: transactions.slice(0, limit),
-    },
-    success: true,
-  });
-}
