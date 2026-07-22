@@ -12,9 +12,11 @@ import {
 } from "../models/transaction.server";
 import { createCategory, getCategoryByTitle } from "../models/category.server";
 import { Transaction } from "@prisma/client";
+import { ControllerResponse } from "./types";
+
 export async function getUserTransactionHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Transaction>>,
   next: NextFunction
 ) {
   const userId = Number(req.params.userId);
@@ -39,14 +41,14 @@ export async function getUserTransactionHandler(
     });
   }
   return res.status(200).json({
-    transaction,
+    data: transaction,
     message: "Transactions found.",
     success: true,
   });
 }
 export async function createTransactionHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Transaction>>,
   next: NextFunction
 ) {
   const userId = req.params.userId;
@@ -78,14 +80,14 @@ export async function createTransactionHandler(
     throw new Error("Transactions failed.");
   }
   return res.status(201).json({
-    transaction,
+    data: transaction,
     message: "Transaction created.",
     success: true,
   });
 }
 export async function getUserTransactionsHandler(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<Transaction[]>>,
   next: NextFunction
 ) {
   const userId = req.params.userId;
@@ -99,13 +101,13 @@ export async function getUserTransactionsHandler(
   }
 
   return res.status(200).json({
-    transactions,
+    data: transactions,
     success: true,
   });
 }
 export async function bulkTransactionsDelete(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const userId = req.params.userId;
@@ -120,7 +122,7 @@ export async function bulkTransactionsDelete(
 
 export async function editUserTransactions(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { userId, transactionId } = req.params;
@@ -146,7 +148,7 @@ export async function editUserTransactions(
 
 export async function bulkTransactionsCreate(
   req: Request,
-  res: Response,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const { transactions } = req.body;
@@ -160,32 +162,34 @@ export async function bulkTransactionsCreate(
 
 export async function adminGetAllTransactions(
   req: Request,
-  res: Response,
+  res: Response<
+    ControllerResponse<{
+      page: number;
+      limit: number;
+      hasNext: boolean;
+      cursor: number | null;
+      pageData: Awaited<ReturnType<typeof getAllTransactions>>;
+    }>
+  >,
   next: NextFunction
 ) {
-  //add pagination here
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 10;
-  let cursor = req.query.cursor;
-
-  // let cursor = null;
-  let records: Transaction[] = [];
-  let hasNext = true;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const cursor = req.query.cursor;
 
   const transactions = await getAllTransactions(
-    Number(page),
-    Number(limit),
+    page,
+    limit,
     cursor ? Number(cursor) : null
   );
-  records = [...transactions];
-  hasNext = records.length > Number(limit);
+  const hasNext = transactions.length > limit;
   return res.status(200).json({
     data: {
       page,
       limit,
       hasNext,
-      cursor: hasNext ? transactions[Number(limit) - 1].id : null,
-      pageData: transactions.slice(0, Number(limit)),
+      cursor: hasNext ? transactions[limit - 1].id : null,
+      pageData: transactions.slice(0, limit),
     },
     success: true,
   });
