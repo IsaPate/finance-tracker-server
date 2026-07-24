@@ -22,6 +22,7 @@ model User {
   refreshToken RefreshToken []
   resetToken ResetToken? 
   enabledReporting Boolean @default(false)
+  emailVerificationToken EmailVerificationToken?
 }
 
 enum UserRoleType {
@@ -72,6 +73,17 @@ model RefreshToken {
 }
 
 model ResetToken {
+
+  id     Int @id @default(autoincrement())
+  token  String @unique
+  userId Int @unique
+  user   User @relation(fields: [userId], references : [id] , onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+
+model EmailVerificationToken {
 
   id     Int @id @default(autoincrement())
   token  String @unique
