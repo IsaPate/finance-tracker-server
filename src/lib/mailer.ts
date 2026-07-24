@@ -159,13 +159,36 @@ export class ResetPasswordEmailService extends EmailService {
 }
 
 export class EmailVerificationService extends EmailService {
-  constructor() {
+  private email: string;
+  constructor(email: string) {
     super();
+    this.email = email;
   }
+
+  private generateNumber() {
+    return 0;
+  }
+
   getHtml(): string {
-    throw new Error("Method not implemented.");
+    const number = this.generateNumber();
+    return `Your verification number is ${number}`;
   }
   async emailSender(): Promise<SMTPTransport.SentMessageInfo> {
-    throw new Error("Method not implemented.");
+    const html = this.getHtml();
+    try {
+      const info = await this.transporter.sendMail({
+        from: "Finance Tracker <ftrack@mail.com>",
+        to: this.email,
+        subject: "Email Verification",
+        html, // HTML body
+      });
+      logger.info("Message sent: %s", info.messageId);
+
+      return info;
+    } catch (err) {
+      logger.error("Error while sending mail");
+      logger.error(JSON.stringify(err));
+      throw err;
+    }
   }
 }
