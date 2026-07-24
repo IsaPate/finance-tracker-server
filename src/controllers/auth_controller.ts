@@ -262,6 +262,7 @@ export async function verifyEmailHandler(
     });
   }
   if (user.emailVerificationToken.expiresAt < new Date()) {
+    await deleteVerificationToken(email, user.emailVerificationToken.token);
     return res
       .status(401)
       .json({ message: "Token has expired.", success: false });
