@@ -3,6 +3,7 @@ import {
   createUser,
   getUserByEmail,
   getUserById,
+  toogleEmailVerified,
   updateUserPasswordByEmail,
 } from "../models/user.server";
 import bcrypt from "bcryptjs";
@@ -30,6 +31,16 @@ import {
   saveVerificationToken,
 } from "../models/emailVerificationToken.server";
 
+async function generateVerificationNumber() {
+  let verificationNumber = crypto.randomInt(100000, 1000000);
+  const bcryptSalt = 10;
+  const hashedVerificationNumber = await bcrypt.hash(
+    String(verificationNumber),
+    bcryptSalt
+  );
+  return { verificationNumber, hashedVerificationNumber };
+}
+
 export async function registerUser(
   req: Request,
   res: Response<
@@ -50,12 +61,8 @@ export async function registerUser(
   const newUser = await createUser(name, hashed, email);
   logger.info({ email: newUser.email }, "user registered");
 
-  let verificationNumber = crypto.randomInt(100000, 1000000);
-  const bcryptSalt = 10;
-  const hashedVerificationNumber = await bcrypt.hash(
-    String(verificationNumber),
-    bcryptSalt
-  );
+  const { verificationNumber, hashedVerificationNumber } =
+    await generateVerificationNumber();
 
   await saveVerificationToken(
     hashedVerificationNumber,
@@ -277,6 +284,7 @@ export async function verifyEmailHandler(
       success: false,
     });
   }
+  await toogleEmailVerified(user.id, true);
   await deleteVerificationToken(email, user.emailVerificationToken.token);
   return res.status(200).json({
     message: "Successfuly verified.",
@@ -289,5 +297,42 @@ export async function resendEmailVerificationCodeHandler(
   res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
-  const { email, verificationNumber } = req.body;
+  const { email } = req.body;
+
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found.",
+    });
+  }
+
+  if (user.emailVerified) {
+    return res.status(200).json({
+      success: true,
+      message: "Already verified.",
+    });
+  }
+
+  if (user.emailVerificationToken?.token) {
+    await deleteVerificationToken(email, user.emailVerificationToken.token);
+  }
+
+  const { verificationNumber, hashedVerificationNumber } =
+    await generateVerificationNumber();
+  const emailVerificationService = new EmailVerificationService(
+    email,
+    String(verificationNumber)
+  );
+  await saveVerificationToken(
+    hashedVerificationNumber,
+    user.id,
+    new Date(Date.now() + 10 * 60 * 1000)
+  );
+  await emailVerificationService.emailSender();
+  return res.status(200).json({
+    success: true,
+    message: "New verification code send.",
+  });
 }
