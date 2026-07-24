@@ -283,3 +283,11 @@ export async function verifyEmailHandler(
     success: true,
   });
 }
+
+export async function resendEmailVerificationCodeHandler(
+  req: Request,
+  res: Response<ControllerResponse<null>>,
+  next: NextFunction
+) {
+  const { email, verificationNumber } = req.body;
+}
