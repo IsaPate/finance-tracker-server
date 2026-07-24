@@ -23,3 +23,10 @@ export const resetPasswordSchema = z.object({
   password: z.string().min(8),
   newPassword: z.string().min(8),
 });
+
+export const emailVerificationSchema = z.object({
+  email: z.string().email(),
+  verificationNumber: z
+    .string()
+    .regex(/^\d{6}$/, "Verification code must be 6 digits"),
+});
