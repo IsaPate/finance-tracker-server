@@ -4,6 +4,12 @@ import { logger } from "./logger";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { round2 } from "../controllers/helper";
 
+type SumAmountByCategory = {
+  amount: number | null;
+  categoryId: number | null;
+  type: "EXPENSE" | "INCOME";
+}[];
+
 abstract class EmailService {
   protected transporter: nodemailer.Transporter;
   constructor() {
@@ -22,21 +28,13 @@ abstract class EmailService {
 
 export class EmailReportingService extends EmailService {
   private email: string;
-  private sumAmountByCategory: {
-    amount: number | null;
-    categoryId: number | null;
-    type: "EXPENSE" | "INCOME";
-  }[];
+  private sumAmountByCategory: SumAmountByCategory;
   private totalIncome: number;
   private totalExpense: number;
 
   constructor(
     email: string,
-    sumAmountByCategory: {
-      amount: number | null;
-      categoryId: number | null;
-      type: "EXPENSE" | "INCOME";
-    }[],
+    sumAmountByCategory: SumAmountByCategory,
     totalIncome: number,
     totalExpense: number
   ) {
