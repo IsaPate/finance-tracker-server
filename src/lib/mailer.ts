@@ -160,18 +160,15 @@ export class ResetPasswordEmailService extends EmailService {
 
 export class EmailVerificationService extends EmailService {
   private email: string;
-  constructor(email: string) {
+  private verfificationNumber: string;
+  constructor(email: string, verfificationNumber: string) {
     super();
     this.email = email;
-  }
-
-  private generateNumber() {
-    return 0;
+    this.verfificationNumber = verfificationNumber;
   }
 
   getHtml(): string {
-    const number = this.generateNumber();
-    return `Your verification number is ${number}`;
+    return `Your verification number is ${this.verfificationNumber}`;
   }
   async emailSender(): Promise<SMTPTransport.SentMessageInfo> {
     const html = this.getHtml();
