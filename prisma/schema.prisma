@@ -23,6 +23,7 @@ model User {
   resetToken ResetToken? 
   enabledReporting Boolean @default(false)
   emailVerificationToken EmailVerificationToken?
+  emailVerified Boolean @default(false)
 }
 
 enum UserRoleType {
