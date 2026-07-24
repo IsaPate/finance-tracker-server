@@ -136,3 +136,17 @@ export const toogleEmailReporting = async (userId: number, toogle: boolean) => {
     },
   });
 };
+
+export const toogleEmailVerified = async (
+  userId: number,
+  verified: boolean
+) => {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      emailVerified: verified,
+    },
+  });
+};
