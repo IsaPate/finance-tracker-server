@@ -211,3 +211,9 @@ export async function resetPasswordHandler(
     success: true,
   });
 }
+
+export async function verifyEmailHandler(
+  req: Request,
+  res: Response<ControllerResponse<null>>,
+  next: NextFunction
+) {}
