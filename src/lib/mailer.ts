@@ -157,3 +157,15 @@ export class ResetPasswordEmailService extends EmailService {
     }
   }
 }
+
+export class EmailVerificationService extends EmailService {
+  constructor() {
+    super();
+  }
+  getHtml(): string {
+    throw new Error("Method not implemented.");
+  }
+  async emailSender(): Promise<SMTPTransport.SentMessageInfo> {
+    throw new Error("Method not implemented.");
+  }
+}
