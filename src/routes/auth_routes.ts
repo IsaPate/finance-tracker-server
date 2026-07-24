@@ -5,11 +5,13 @@ import {
   loginUser,
   registerUser,
   resetPasswordHandler,
+  verifyEmailHandler,
 } from "../controllers/auth_controller";
 import { asyncHandler } from "../middlewares/handlers";
 import { refreshTokenHandler, logoutHandler } from "../middlewares/auth";
 import { validationMiddleware } from "../middlewares/validate";
 import {
+  emailVerificationSchema,
   forgotPasswordSchema,
   loginSchema,
   registrationSchema,
@@ -44,4 +46,11 @@ authRouter.post(
   validationMiddleware(resetPasswordSchema),
   asyncHandler(resetPasswordHandler)
 );
+authRouter.post(
+  "/email-verification",
+  authLimiter,
+  validationMiddleware(emailVerificationSchema),
+  asyncHandler(verifyEmailHandler)
+);
+
 export { authRouter };
