@@ -1,6 +1,6 @@
 # Finance Tracker API
 
-Express + TypeScript REST API for personal finance management (income/expenses, categories, users), with JWT authentication (access + refresh token) and an admin dashboard.
+Express + TypeScript REST API for personal finance management (income/expenses, categories, users), with JWT authentication (access + refresh token), email verification, and an admin dashboard.
 
 ## Tech stack
 
