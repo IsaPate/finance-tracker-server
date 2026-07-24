@@ -75,6 +75,7 @@ export const getUserByEmail = async (email: string) => {
     },
     include: {
       resetToken: true,
+      emailVerificationToken: true,
     },
   });
 };
