@@ -19,8 +19,16 @@ import {
   getResetTokenByUserId,
 } from "../models/resetToken.server";
 import config from "../lib/env.export";
-import { ResetPasswordEmailService } from "../lib/mailer";
+import {
+  EmailVerificationService,
+  ResetPasswordEmailService,
+} from "../lib/mailer";
 import { ControllerResponse } from "./types";
+import {
+  deleteVerificationToken,
+  findVerificationToken,
+  saveVerificationToken,
+} from "../models/emailVerificationToken.server";
 
 export async function registerUser(
   req: Request,
@@ -38,8 +46,28 @@ export async function registerUser(
     throw new Error("Email already exists");
   }
   const hashed = await bcrypt.hash(password, 10);
+
   const newUser = await createUser(name, hashed, email);
   logger.info({ email: newUser.email }, "user registered");
+
+  let verificationNumber = crypto.randomInt(100000, 1000000);
+  const bcryptSalt = 10;
+  const hashedVerificationNumber = await bcrypt.hash(
+    String(verificationNumber),
+    bcryptSalt
+  );
+
+  await saveVerificationToken(
+    hashedVerificationNumber,
+    newUser.id,
+    new Date(Date.now() + 10 * 60 * 1000)
+  );
+  const emailVerification = new EmailVerificationService(
+    email,
+    String(verificationNumber)
+  );
+  await emailVerification.emailSender();
+
   return res.status(201).json({
     message: "User created successfully",
     data: {
@@ -216,4 +244,41 @@ export async function verifyEmailHandler(
   req: Request,
   res: Response<ControllerResponse<null>>,
   next: NextFunction
-) {}
+) {
+  const { email, verificationNumber } = req.body;
+
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found.",
+    });
+  }
+  if (!user.emailVerificationToken) {
+    return res.status(401).json({
+      message: "Not verified.",
+      success: false,
+    });
+  }
+  if (user.emailVerificationToken.expiresAt < new Date()) {
+    return res
+      .status(401)
+      .json({ message: "Token has expired.", success: false });
+  }
+  const compare = await bcrypt.compare(
+    verificationNumber,
+    user.emailVerificationToken.token
+  );
+  if (!compare) {
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false,
+    });
+  }
+  await deleteVerificationToken(email, user.emailVerificationToken.token);
+  return res.status(200).json({
+    message: "Successfuly verified.",
+    success: true,
+  });
+}
