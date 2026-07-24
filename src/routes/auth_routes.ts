@@ -4,6 +4,7 @@ import {
   forgotPasswordHandler,
   loginUser,
   registerUser,
+  resendEmailVerificationCodeHandler,
   resetPasswordHandler,
   verifyEmailHandler,
 } from "../controllers/auth_controller";
@@ -15,6 +16,7 @@ import {
   forgotPasswordSchema,
   loginSchema,
   registrationSchema,
+  resendCodeSchema,
   resetPasswordSchema,
 } from "../schemas/auth.schema";
 import { authLimiter } from "../lib/rate-limit";
@@ -53,4 +55,10 @@ authRouter.post(
   asyncHandler(verifyEmailHandler)
 );
 
+authRouter.post(
+  "/resend-code",
+  authLimiter,
+  validationMiddleware(resendCodeSchema),
+  asyncHandler(resendEmailVerificationCodeHandler)
+);
 export { authRouter };
