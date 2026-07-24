@@ -17,7 +17,7 @@ import {
   createResetToken,
   deleteResetTokenByUserId,
   getResetTokenByUserId,
-} from "../models/resetToken";
+} from "../models/resetToken.server";
 import config from "../lib/env.export";
 import { ResetPasswordEmailService } from "../lib/mailer";
 import { ControllerResponse } from "./types";
