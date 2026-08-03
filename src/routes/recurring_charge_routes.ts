@@ -8,6 +8,11 @@ import {
   deleteRecurringCharge,
   editRecurringCharge,
 } from "../controllers/recurring_charge_controller";
+import { validationMiddleware } from "../middlewares/validate";
+import {
+  editRecurringChargeSchema,
+  recurringChargeSchema,
+} from "../schemas/recurring_charge_schema";
 
 const recurringChargesRouter = Router();
 
@@ -21,6 +26,7 @@ recurringChargesRouter.post(
   "/users/:userId/recurring-charges",
   verifyTokenMiddleware,
   isSelfUser,
+  validationMiddleware(recurringChargeSchema),
   asyncHandler(createUserRecurringCharges)
 );
 
@@ -35,6 +41,7 @@ recurringChargesRouter.patch(
   "/users/:userId/recurring-charges/:recurringChargeId",
   verifyTokenMiddleware,
   isSelfUser,
+  validationMiddleware(editRecurringChargeSchema),
   asyncHandler(editRecurringCharge)
 );
 recurringChargesRouter.delete(
