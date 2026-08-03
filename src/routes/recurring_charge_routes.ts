@@ -5,6 +5,7 @@ import {
   getUserRecurringCharges,
   createUserRecurringCharges,
   getSingleRecurringCharge,
+  deleteRecurringCharge,
 } from "../controllers/recurring_charge_controller";
 
 const recurringChargesRouter = Router();
@@ -37,7 +38,8 @@ recurringChargesRouter.put(
 recurringChargesRouter.delete(
   "/users/:userId/recurring-charges/:recurringChargeId",
   verifyTokenMiddleware,
-  isSelfUser
+  isSelfUser,
+  asyncHandler(deleteRecurringCharge)
 );
 
 export default recurringChargesRouter;
