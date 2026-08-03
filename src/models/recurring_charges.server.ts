@@ -25,12 +25,14 @@ export const getRecurringChargesByUserIdAndByDate = async (
   });
 };
 
-export const getRecurringChargeByRecurringChargeId = async (
-  recurringChargeId: number
+export const getRecurringChargeByRecurringChargeIdAndUserId = async (
+  recurringChargeId: number,
+  userId: number
 ) => {
   return await prisma.recurringCharge.findUnique({
     where: {
       id: recurringChargeId,
+      userId,
     },
   });
 };
