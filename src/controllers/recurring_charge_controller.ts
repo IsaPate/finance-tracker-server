@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   createRecurringCharges,
   deleteRecurringChargeByUserIdAndRecurringChargeId,
+  editRecurringChargeResource,
   getRecurringChargeByRecurringChargeIdAndUserId,
   getRecurringChargesByUserId,
 } from "../models/recurring_charges.server";
@@ -75,7 +76,7 @@ export async function getSingleRecurringCharge(
 
 export async function deleteRecurringCharge(
   req: Request,
-  res: Response<ControllerResponse<RecurringCharge>>,
+  res: Response<ControllerResponse<null>>,
   next: NextFunction
 ) {
   const userId = Number(req.params.userId);
@@ -87,6 +88,36 @@ export async function deleteRecurringCharge(
   );
   return res.status(200).json({
     message: "Recurring charge deleted.",
+    success: true,
+  });
+}
+
+export async function editRecurringCharge(
+  req: Request,
+  res: Response<ControllerResponse<null>>,
+  next: NextFunction
+) {
+  const userId = Number(req.params.userId);
+  const recurringChargeId = Number(req.params.recurringChargeId);
+  const { title, amount, frequency, type, start } = req.body;
+
+  const edited = await editRecurringChargeResource(
+    userId,
+    recurringChargeId,
+    title,
+    amount,
+    start,
+    type,
+    frequency
+  );
+  if (edited.count === 0) {
+    return res.status(404).json({
+      success: false,
+      message: "Recurring charge not found.",
+    });
+  }
+  return res.status(200).json({
+    message: "Recurring charge updated.",
     success: true,
   });
 }
