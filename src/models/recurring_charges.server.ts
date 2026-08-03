@@ -80,3 +80,27 @@ export const deleteRecurringChargeByUserIdAndRecurringChargeId = async (
     },
   });
 };
+
+export const editRecurringChargeResource = async (
+  userId: number,
+  recurringChargeId: number,
+  title?: string,
+  amount?: number,
+  start?: Date,
+  type?: $Enums.TransactionType,
+  freq?: $Enums.Frequency
+) => {
+  return await prisma.recurringCharge.updateMany({
+    data: {
+      title,
+      amount,
+      type,
+      frequency: freq,
+      startCycle: start,
+    },
+    where: {
+      userId,
+      id: recurringChargeId,
+    },
+  });
+};
