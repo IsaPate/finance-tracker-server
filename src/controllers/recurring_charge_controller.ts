@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   createRecurringCharges,
+  deleteRecurringChargeByUserIdAndRecurringChargeId,
   getRecurringChargeByRecurringChargeIdAndUserId,
   getRecurringChargesByUserId,
 } from "../models/recurring_charges.server";
@@ -68,6 +69,24 @@ export async function getSingleRecurringCharge(
   return res.status(200).json({
     data: recurringCharge,
     message: "Recurring transaction found.",
+    success: true,
+  });
+}
+
+export async function deleteRecurringCharge(
+  req: Request,
+  res: Response<ControllerResponse<RecurringCharge>>,
+  next: NextFunction
+) {
+  const userId = Number(req.params.userId);
+  const recurringChargeId = Number(req.params.recurringChargeId);
+
+  await deleteRecurringChargeByUserIdAndRecurringChargeId(
+    userId,
+    recurringChargeId
+  );
+  return res.status(200).json({
+    message: "Recurring charge deleted.",
     success: true,
   });
 }
