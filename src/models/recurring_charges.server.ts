@@ -68,3 +68,15 @@ export const createRecurringCharges = async (
     },
   });
 };
+
+export const deleteRecurringChargeByUserIdAndRecurringChargeId = async (
+  userId: number,
+  recurringChargeId: number
+) => {
+  return await prisma.recurringCharge.delete({
+    where: {
+      id: recurringChargeId,
+      userId,
+    },
+  });
+};
