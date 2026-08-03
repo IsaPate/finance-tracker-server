@@ -1,3 +1,4 @@
+import { $Enums } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
 
 export const getRecurringChargesByUserId = async (userId: number) => {
@@ -30,6 +31,18 @@ export const getRecurringChargeByRecurringChargeId = async (
   return await prisma.recurringCharge.findUnique({
     where: {
       id: recurringChargeId,
+    },
+  });
+};
+
+export const getRecurringChargesByUserIdAndFrequency = async (
+  userId: number,
+  freq: $Enums.Frequency
+) => {
+  return await prisma.recurringCharge.findMany({
+    where: {
+      userId,
+      frequency: freq,
     },
   });
 };
