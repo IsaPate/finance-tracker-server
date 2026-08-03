@@ -46,3 +46,23 @@ export const getRecurringChargesByUserIdAndFrequency = async (
     },
   });
 };
+
+export const createRecurringCharges = async (
+  title: string,
+  amount: number,
+  start: Date,
+  type: $Enums.TransactionType,
+  freq: $Enums.Frequency,
+  userId: number
+) => {
+  return await prisma.recurringCharge.create({
+    data: {
+      title,
+      amount,
+      type,
+      frequency: freq,
+      startCycle: start,
+      userId,
+    },
+  });
+};
