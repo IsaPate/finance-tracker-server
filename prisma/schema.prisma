@@ -24,6 +24,7 @@ model User {
   enabledReporting Boolean @default(false)
   emailVerificationToken EmailVerificationToken?
   emailVerified Boolean @default(false)
+  recurringCharge RecurringCharge[]
 }
 
 enum UserRoleType {
@@ -44,6 +45,9 @@ model Transaction {
 
   categoryId Int?
   category   Category?        @relation(fields: [categoryId], references: [id] , onDelete: SetNull )
+
+  recurringChargeId Int? 
+  recurringCharge   RecurringCharge? @relation(fields: [recurringChargeId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
 
@@ -92,4 +96,27 @@ model EmailVerificationToken {
   user   User @relation(fields: [userId], references : [id] , onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+
+model RecurringCharge {
+  id     Int @id @default(autoincrement())
+  title  String 
+  amount Float
+  type   TransactionType
+  frequency Frequency
+  startCycle  DateTime
+  endCycle    DateTime?
+  createdAt   DateTime        @default(now())
+  userId  Int
+  user   User @relation(fields: [userId], references : [id] , onDelete: Cascade)
+
+  transactions Transaction []
+
+  @@index([userId])
+}
+
+enum Frequency {
+  ANNUAL
+  MONTHLY 
 }
