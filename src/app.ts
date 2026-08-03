@@ -12,6 +12,7 @@ import { categoryRouter } from "./routes/category_routes";
 import { authRouter } from "./routes/auth_routes";
 import { adminRouter } from "./routes/admin_routes";
 import { globalLimiter } from "./lib/rate-limit";
+import recurringChargesRouter from "./routes/recurring_charge_routes";
 
 export const app: Application = express();
 
@@ -27,6 +28,7 @@ app.use(
 app.use(helmet());
 app.use(globalLimiter);
 app.use("/auth", authRouter);
+app.use(recurringChargesRouter);
 app.use(userRouter);
 app.use(transactionRouter);
 app.use(categoryRouter);
