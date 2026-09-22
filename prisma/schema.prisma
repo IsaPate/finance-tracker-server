@@ -108,6 +108,7 @@ model RecurringCharge {
   startCycle  DateTime
   endCycle    DateTime?
   createdAt   DateTime        @default(now())
+  lastGeneratedAt DateTime?
   userId  Int
   user   User @relation(fields: [userId], references : [id] , onDelete: Cascade)
 
