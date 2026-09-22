@@ -23,7 +23,7 @@ export async function getUserRecurringCharges(
   let upcomingCharges = getUpcomingCharges(recurringCharges);
 
   if (upcoming === "true") {
-    upcomingCharges.filter((charge) =>
+    upcomingCharges = upcomingCharges.filter((charge) =>
       String(charge.isUpcoming).includes(upcoming)
     );
   }
