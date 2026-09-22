@@ -7,7 +7,7 @@ import {
   getRecurringChargesByUserId,
 } from "../models/recurring_charges.server";
 import { ControllerResponse, RecurringChargeWithFlag } from "./types";
-import { Frequency, RecurringCharge } from "@prisma/client";
+import { RecurringCharge } from "@prisma/client";
 import cron from "node-cron";
 import {
   compareDates,
