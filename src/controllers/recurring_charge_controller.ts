@@ -8,11 +8,7 @@ import {
 } from "../models/recurring_charges.server";
 import { ControllerResponse, RecurringChargeWithFlag } from "./types";
 import { RecurringCharge } from "@prisma/client";
-import cron from "node-cron";
-import {
-  compareDates,
-  getUpcomingCharges,
-} from "../recurring-charge-modules/recurring-charge";
+import { getUpcomingCharges } from "../recurring-charge-modules/recurring-charge";
 
 export async function getUserRecurringCharges(
   req: Request,
