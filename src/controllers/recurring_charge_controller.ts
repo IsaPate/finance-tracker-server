@@ -6,20 +6,33 @@ import {
   getRecurringChargeByRecurringChargeIdAndUserId,
   getRecurringChargesByUserId,
 } from "../models/recurring_charges.server";
-import { ControllerResponse } from "./types";
-import { RecurringCharge } from "@prisma/client";
+import { ControllerResponse, RecurringChargeWithFlag } from "./types";
+import { Frequency, RecurringCharge } from "@prisma/client";
+import cron from "node-cron";
+import {
+  compareDates,
+  getUpcomingCharges,
+} from "../recurring-charge-modules/recurring-charge";
 
 export async function getUserRecurringCharges(
   req: Request,
-  res: Response<ControllerResponse<RecurringCharge[]>>,
+  res: Response<ControllerResponse<RecurringChargeWithFlag[]>>,
   next: NextFunction
 ) {
   const userId = Number(req.params.userId);
+  const upcoming = req.query.upcoming;
 
   const recurringCharges = await getRecurringChargesByUserId(userId);
 
+  let upcomingCharges = getUpcomingCharges(recurringCharges);
+
+  if (upcoming === "true") {
+    upcomingCharges.filter((charge) =>
+      String(charge.isUpcoming).includes(upcoming)
+    );
+  }
   return res.status(200).json({
-    data: recurringCharges,
+    data: upcomingCharges,
     message: "Recurring transactions found.",
     success: true,
   });
