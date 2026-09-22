@@ -4,7 +4,10 @@ import { prisma } from "../lib/prisma_client";
 export const getRecurringChargesByUserId = async (userId: number) => {
   return await prisma.recurringCharge.findMany({
     where: {
-      userId,
+      AND: [
+        { userId },
+        { OR: [{ endCycle: null }, { endCycle: { gt: new Date() } }] },
+      ],
     },
   });
 };
