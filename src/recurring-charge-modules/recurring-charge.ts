@@ -16,26 +16,33 @@ export function expiredDateOrSame(now: Date, nextChargeDate: Date) {
   return now.getTime() >= nextChargeDate.getTime();
 }
 
+export function getNextChargeDateAccordingToFrequency(
+  charge: Pick<RecurringCharge, "lastGeneratedAt" | "startCycle" | "frequency">
+) {
+  const anchor = charge.lastGeneratedAt ?? charge.startCycle;
+  const nextCharge = new Date(anchor);
+
+  if (charge.frequency === "MONTHLY") {
+    nextCharge.setMonth(nextCharge.getMonth() + 1);
+  } else {
+    nextCharge.setFullYear(nextCharge.getFullYear() + 1);
+  }
+
+  return nextCharge;
+}
+
 export function getUpcomingCharges(recurringCharges: RecurringCharge[]) {
   const now = new Date();
 
   return recurringCharges.map((charge) => {
     //check from client if now < start cycle?
-    const anchor = charge.lastGeneratedAt ?? charge.startCycle;
-    const startOrLastGenerated = new Date(anchor);
+    const nextCharge = getNextChargeDateAccordingToFrequency(charge);
 
-    if (charge.frequency === "MONTHLY") {
-      startOrLastGenerated.setMonth(startOrLastGenerated.getMonth() + 1);
-    } else {
-      startOrLastGenerated.setFullYear(startOrLastGenerated.getFullYear() + 1);
-    }
-
-    const previous = new Date(startOrLastGenerated);
+    const previous = new Date(nextCharge);
     previous.setDate(previous.getDate() - 1);
     return {
       ...charge,
-      isUpcoming:
-        compareDates(now, startOrLastGenerated) || compareDates(now, previous),
+      isUpcoming: compareDates(now, nextCharge) || compareDates(now, previous),
     };
   });
 }
@@ -46,15 +53,7 @@ export async function scanForRecurringCharges() {
 
   for (const upcoming of recurring) {
     const now = new Date();
-    const anchor = upcoming.lastGeneratedAt ?? upcoming.startCycle;
-
-    const nextCharge = new Date(anchor);
-
-    if (upcoming.frequency === "MONTHLY") {
-      nextCharge.setMonth(nextCharge.getMonth() + 1);
-    } else {
-      nextCharge.setFullYear(nextCharge.getFullYear() + 1);
-    }
+    const nextCharge = getNextChargeDateAccordingToFrequency(upcoming);
 
     if (expiredDateOrSame(now, nextCharge)) {
       await updateLastGeneratedAtAndCreateTransaction(nextCharge, upcoming);
