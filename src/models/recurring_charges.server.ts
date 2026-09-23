@@ -1,4 +1,4 @@
-import { $Enums } from "@prisma/client";
+import { $Enums, RecurringCharge } from "@prisma/client";
 import { prisma } from "../lib/prisma_client";
 
 export const getRecurringChargesByUserId = async (userId: number) => {
@@ -26,6 +26,38 @@ export const getRecurringChargesByUserIdAndByDate = async (
       },
     },
   });
+};
+
+export const getAllRecurringCharges = async () => {
+  return await prisma.recurringCharge.findMany({
+    where: {
+      AND: [
+        { startCycle: { lt: new Date() } },
+        { OR: [{ endCycle: null }, { endCycle: { gt: new Date() } }] },
+      ],
+    },
+  });
+};
+export const updateLastGeneratedAtAndCreateTransaction = async (
+  nextCharge: Date,
+  upcoming: RecurringCharge
+) => {
+  return await prisma.$transaction([
+    prisma.recurringCharge.updateMany({
+      where: { userId: upcoming.userId, id: upcoming.id },
+      data: { lastGeneratedAt: nextCharge },
+    }),
+    prisma.transaction.create({
+      data: {
+        title: upcoming.title,
+        amount: upcoming.amount,
+        type: upcoming.type,
+        recurringChargeId: upcoming.id,
+        userId: upcoming.userId,
+        createdAt: nextCharge,
+      },
+    }),
+  ]);
 };
 
 export const getRecurringChargeByRecurringChargeIdAndUserId = async (
