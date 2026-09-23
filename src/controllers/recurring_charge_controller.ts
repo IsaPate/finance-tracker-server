@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {
+  cancelRecurringChargeResource,
   createRecurringCharges,
   deleteRecurringChargeByUserIdAndRecurringChargeId,
   editRecurringChargeResource,
@@ -128,5 +129,36 @@ export async function editRecurringCharge(
   return res.status(200).json({
     message: "Recurring charge updated.",
     success: true,
+  });
+}
+
+export async function cancelRecurringCharge(
+  req: Request,
+  res: Response<ControllerResponse<boolean>>,
+  next: NextFunction
+) {
+  const recurringChargeId = Number(req.params.recurringChargeId);
+  const userId = Number(req.params.userId);
+
+  const charge = await getRecurringChargeByRecurringChargeIdAndUserId(
+    recurringChargeId,
+    userId
+  );
+  if (!charge) {
+    return res.status(404).json({
+      success: false,
+      message: "Recurring charge not found.",
+    });
+  }
+  if (charge.endCycle) {
+    return res.status(400).json({
+      success: false,
+      message: "Can not cancel an already cancelled charge.",
+    });
+  }
+  await cancelRecurringChargeResource(userId, recurringChargeId);
+  return res.status(200).json({
+    success: true,
+    message: "Successfully cancelled.",
   });
 }
