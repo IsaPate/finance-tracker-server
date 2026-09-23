@@ -107,3 +107,13 @@ export const editRecurringChargeResource = async (
     },
   });
 };
+
+export const cancelRecurringChargeResource = async (
+  userId: number,
+  recurringChargeId: number
+) => {
+  return await prisma.recurringCharge.updateMany({
+    data: { endCycle: new Date() },
+    where: { userId, id: recurringChargeId },
+  });
+};
