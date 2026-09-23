@@ -7,6 +7,7 @@ import {
   getSingleRecurringCharge,
   deleteRecurringCharge,
   editRecurringCharge,
+  cancelRecurringCharge,
 } from "../controllers/recurring_charge_controller";
 import { validationMiddleware } from "../middlewares/validate";
 import {
@@ -51,4 +52,11 @@ recurringChargesRouter.delete(
   asyncHandler(deleteRecurringCharge)
 );
 
+recurringChargesRouter.patch(
+  "/users/:userId/recurring-charges/:recurringChargeId/cancel",
+  verifyTokenMiddleware,
+  isSelfUser,
+  // validationMiddleware(editRecurringChargeSchema),
+  asyncHandler(cancelRecurringCharge)
+);
 export default recurringChargesRouter;
