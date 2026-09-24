@@ -1,6 +1,6 @@
 # Finance Tracker API
 
-Express + TypeScript REST API for personal finance management (income/expenses, categories, users), with JWT authentication (access + refresh token), email verification, and an admin dashboard.
+Express + TypeScript REST API for personal finance management (income/expenses, categories, recurring charges, users), with JWT authentication (access + refresh token), email verification, and an admin dashboard.
 
 ## Tech stack
 
@@ -14,7 +14,7 @@ Express + TypeScript REST API for personal finance management (income/expenses, 
 - **cors** — cross-origin requests (React frontend)
 - **express-rate-limit** — rate limiting
 - **nodemailer** — sending password reset and monthly report emails
-- **node-cron** — scheduling the monthly email report job
+- **node-cron** — scheduling the monthly email report job and the recurring-charge generator (creates transactions from due recurring charges, advances `lastGeneratedAt`)
 - **p-queue** — controlled-concurrency sending of report emails
 - **Jest** + **Supertest** — tests
 
