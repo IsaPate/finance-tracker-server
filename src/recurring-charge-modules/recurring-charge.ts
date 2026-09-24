@@ -33,7 +33,6 @@ export function getNextChargeDateAccordingToFrequency(
 
 export function getUpcomingCharges(recurringCharges: RecurringCharge[]) {
   return recurringCharges.map((charge) => {
-    //check from client if now < start cycle?
     const nextCharge = getNextChargeDateAccordingToFrequency(charge);
 
     const previous = new Date(nextCharge);
