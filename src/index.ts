@@ -14,7 +14,7 @@ cron.schedule("30 10 1 * *", async () => {
   }
 });
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     await scanForRecurringCharges();
   } catch (error) {
