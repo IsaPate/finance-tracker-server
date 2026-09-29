@@ -42,12 +42,13 @@ export const updateLastGeneratedAtAndCreateTransaction = async (
   nextCharge: Date,
   upcoming: RecurringCharge
 ) => {
-  return await prisma.$transaction([
-    prisma.recurringCharge.updateMany({
-      where: { userId: upcoming.userId, id: upcoming.id },
+  return await prisma.$transaction(async (tx) => {
+    const updated = await tx.recurringCharge.updateMany({
+      where: { id: upcoming.id, lastGeneratedAt: upcoming.lastGeneratedAt },
       data: { lastGeneratedAt: nextCharge },
-    }),
-    prisma.transaction.create({
+    });
+    if (updated.count === 0) return null;
+    return await tx.transaction.create({
       data: {
         title: upcoming.title,
         amount: upcoming.amount,
@@ -56,8 +57,8 @@ export const updateLastGeneratedAtAndCreateTransaction = async (
         userId: upcoming.userId,
         createdAt: nextCharge,
       },
-    }),
-  ]);
+    });
+  });
 };
 
 export const getRecurringChargeByRecurringChargeIdAndUserId = async (
