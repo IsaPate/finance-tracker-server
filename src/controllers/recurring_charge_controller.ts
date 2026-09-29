@@ -75,7 +75,10 @@ export async function getSingleRecurringCharge(
     userId
   );
   if (!recurringCharge) {
-    throw new Error("Recurring charges not found.");
+    return res.status(404).json({
+      success: false,
+      message: "Recurring charges not found.",
+    });
   }
   return res.status(200).json({
     data: recurringCharge,
