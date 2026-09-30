@@ -7,7 +7,6 @@ export const recurringChargeSchema = z.object({
     .positive("Amount must be positive number.")
     .multipleOf(0.01, "Max 2 decimal places"),
   type: z.enum(["INCOME", "EXPENSE"]),
-  createdAt: z.string().datetime(),
   frequency: z.enum(["ANNUAL", "MONTHLY"]),
   start: z.string().datetime(),
   //   category: z.string().min(1).max(100).optional(),
