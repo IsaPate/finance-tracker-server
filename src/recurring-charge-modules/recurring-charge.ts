@@ -3,6 +3,12 @@ import {
   getAllRecurringCharges,
   updateLastGeneratedAtAndCreateTransaction,
 } from "../models/recurring_charges.server";
+import {
+  addMonths,
+  addYears,
+  differenceInCalendarMonths,
+  differenceInCalendarYears,
+} from "date-fns";
 
 export function compareDates(now: Date, start: Date) {
   now.setHours(0, 0, 0, 0);
@@ -19,15 +25,24 @@ export function expiredDateOrSame(now: Date, nextChargeDate: Date) {
 export function getNextChargeDateAccordingToFrequency(
   charge: Pick<RecurringCharge, "lastGeneratedAt" | "startCycle" | "frequency">
 ) {
-  const anchor = charge.lastGeneratedAt ?? charge.startCycle;
-  const nextCharge = new Date(anchor);
+  const startCycle = charge.startCycle;
+  const lastGeneratedAt = charge.lastGeneratedAt;
+  let nextCharge = new Date(startCycle);
 
+  const monthNumber = differenceInCalendarMonths(
+    lastGeneratedAt ?? startCycle,
+    startCycle
+  );
+  const yearNumber = differenceInCalendarYears(
+    lastGeneratedAt ?? startCycle,
+    startCycle
+  );
   if (charge.frequency === "MONTHLY") {
-    nextCharge.setMonth(nextCharge.getMonth() + 1);
+    //+1 in order to get next cycle date
+    nextCharge = addMonths(nextCharge, monthNumber + 1);
   } else {
-    nextCharge.setFullYear(nextCharge.getFullYear() + 1);
+    nextCharge = addYears(nextCharge, yearNumber + 1);
   }
-
   return nextCharge;
 }
 
