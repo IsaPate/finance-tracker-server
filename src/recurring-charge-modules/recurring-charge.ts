@@ -29,25 +29,23 @@ export function getNextChargeDateAccordingToFrequency(
   const lastGeneratedAt = charge.lastGeneratedAt;
   let nextCharge = new Date(startCycle);
 
-  const monthNumber = differenceInCalendarMonths(
-    lastGeneratedAt ?? startCycle,
-    startCycle
-  );
-  const yearNumber = differenceInCalendarYears(
-    lastGeneratedAt ?? startCycle,
-    startCycle
-  );
+  if (!lastGeneratedAt) {
+    return nextCharge;
+  }
+
   if (charge.frequency === "MONTHLY") {
+    const monthNumber = differenceInCalendarMonths(lastGeneratedAt, startCycle);
     //+1 in order to get next cycle date
     nextCharge = addMonths(nextCharge, monthNumber + 1);
   } else {
+    const yearNumber = differenceInCalendarYears(lastGeneratedAt, startCycle);
     nextCharge = addYears(nextCharge, yearNumber + 1);
   }
   return nextCharge;
 }
 
 export function getUpcomingCharges(recurringCharges: RecurringCharge[]) {
-  return recurringCharges.map((charge) => {
+  const upcoming = recurringCharges.map((charge) => {
     const nextCharge = getNextChargeDateAccordingToFrequency(charge);
 
     const previous = new Date(nextCharge);
@@ -57,6 +55,7 @@ export function getUpcomingCharges(recurringCharges: RecurringCharge[]) {
       isUpcoming: expiredDateOrSame(new Date(), previous),
     };
   });
+  return upcoming.filter((up) => up.isUpcoming);
 }
 
 export async function scanForRecurringCharges() {
