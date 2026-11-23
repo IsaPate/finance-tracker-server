@@ -17,19 +17,14 @@ export async function getUserRecurringCharges(
   next: NextFunction
 ) {
   const userId = Number(req.params.userId);
-  const upcoming = req.query.upcoming;
+  // const upcoming = req.query.upcoming;
 
   const recurringCharges = await getRecurringChargesByUserId(userId);
 
-  let upcomingCharges = getUpcomingCharges(recurringCharges);
+  const upcomingCharges = getUpcomingCharges(recurringCharges);
 
-  if (upcoming === "true") {
-    upcomingCharges = upcomingCharges.filter((charge) =>
-      String(charge.isUpcoming).includes(upcoming)
-    );
-  }
   return res.status(200).json({
-    data: upcomingCharges,
+    data: upcomingCharges.length ? upcomingCharges : [],
     message: "Recurring transactions found.",
     success: true,
   });
