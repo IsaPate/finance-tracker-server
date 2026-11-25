@@ -47,6 +47,7 @@ export async function registerUser(
     ControllerResponse<{
       name: string;
       email: string;
+      role: string;
     }>
   >,
   next: NextFunction
@@ -80,6 +81,7 @@ export async function registerUser(
     data: {
       name: newUser.name,
       email: newUser.email,
+      role: newUser.role,
     },
     success: true,
   });
@@ -87,7 +89,16 @@ export async function registerUser(
 
 export async function loginUser(
   req: Request,
-  res: Response<ControllerResponse<string>>,
+  res: Response<
+    ControllerResponse<{
+      token: string;
+      user: {
+        name: string;
+        email: string;
+        role: string;
+      };
+    }>
+  >,
   next: NextFunction
 ) {
   const { email, password } = req.body;
@@ -128,7 +139,14 @@ export async function loginUser(
   logger.info(`ID ${user.id} logged in.`);
   return res.status(200).json({
     message: "Login successful",
-    data: token,
+    data: {
+      token,
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    },
     success: true,
   });
 }
