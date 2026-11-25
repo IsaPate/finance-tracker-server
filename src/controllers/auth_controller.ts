@@ -30,6 +30,7 @@ import {
   findVerificationToken,
   saveVerificationToken,
 } from "../models/emailVerificationToken.server";
+import { $Enums } from "@prisma/client";
 
 async function generateVerificationNumber() {
   let verificationNumber = crypto.randomInt(100000, 1000000);
@@ -47,7 +48,7 @@ export async function registerUser(
     ControllerResponse<{
       name: string;
       email: string;
-      role: string;
+      role: $Enums.UserRoleType;
     }>
   >,
   next: NextFunction
@@ -95,7 +96,7 @@ export async function loginUser(
       user: {
         name: string;
         email: string;
-        role: string;
+        role: $Enums.UserRoleType;
       };
     }>
   >,
