@@ -6,14 +6,9 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { errorMiddleware } from "./middlewares/handlers";
-import { userRouter } from "./routes/user_routes";
-import { transactionRouter } from "./routes/transaction_routes";
-import { categoryRouter } from "./routes/category_routes";
-import { authRouter } from "./routes/auth_routes";
-import { adminRouter } from "./routes/admin_routes";
-import { globalLimiter } from "./lib/rate-limit";
-import recurringChargesRouter from "./routes/recurring_charge_routes";
 
+import { globalLimiter } from "./lib/rate-limit";
+import apiRouter from "./api";
 export const app: Application = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -25,14 +20,9 @@ app.use(
     credentials: true,
   })
 );
+apiRouter.use("/api", apiRouter);
 app.use(helmet());
 app.use(globalLimiter);
-app.use("/auth", authRouter);
-app.use(recurringChargesRouter);
-app.use(userRouter);
-app.use(transactionRouter);
-app.use(categoryRouter);
-app.use(adminRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript + Express!");
